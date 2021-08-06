@@ -14,6 +14,11 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Panda lib
+ *
+ * @constructor Create empty Panda lib
+ */
 class PandaLib : Plugin(){
     var config : Configuration? = null
 
@@ -41,6 +46,7 @@ class PandaLib : Plugin(){
             PMessage.print("&e┖━━━━━━━━━━ PandaLib ━━━━━━━━━━━━━━━━━━━━━━━┛")
         }
     }
+
     fun getLastVestion(): List<String>? {
         val list: MutableList<String> = ArrayList()
         try {

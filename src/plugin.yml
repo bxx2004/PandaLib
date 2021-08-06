@@ -1,0 +1,6 @@
+name: PandaLib
+main: net.bxx2004.pandalib.bukkit.PandaLib
+version: 2.0.0
+author: bxx2004
+softdepend:
+  - Vault

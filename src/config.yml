@@ -1,0 +1,16 @@
+##  LIB UPDATE  设置##
+LIBUPDATE:
+  #是否自动检查PandaLib有无更新,如有更新将会在控制台输出最新版本的消息
+  #更新的前提是依赖PandaLib的插件需要兼容最新版本的PandaLib,否则无需更新
+  UPDATEMESSAGE: true
+  #是否开启最新版本的PandaLib自动下载,这不会对现有版本的PandaLib产生任何影响
+  #下载目录默认为 plugins/PandaLib/version ,在不更改的前提下
+  #使用符号[ ! ] 更改绝对路径,否则都是相对路径 例如  !D:/
+  #值为空则不开启,否则将下载最新版本到指定路径
+  DOWNLOADPATH: "version"
+##  LIB INFO  设置##
+LIBINFO:
+  #是否每次开启服务器时显示启动消息
+  PRINTMESSAGE: true
+#END#
+#至此,你已经完成了PandaLib的所有设置#

@@ -35,6 +35,7 @@ public class PJObject {
             this.args = args;
             this.objects = objects;
             Constructor c = this.clazz.getConstructor(args);
+            c.setAccessible(true);
             return c.newInstance(objects);
         } catch (Exception e) {
             e.printStackTrace();

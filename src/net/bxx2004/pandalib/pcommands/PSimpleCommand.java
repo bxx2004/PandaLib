@@ -1,9 +1,16 @@
 package net.bxx2004.pandalib.pcommands;
 
+import net.bxx2004.java.reflect.PJObject;
+import net.bxx2004.java.reflect.PJVariable;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Locale;
 
 /**
  * 简单的命令构建类
@@ -15,10 +22,10 @@ public abstract class PSimpleCommand {
     public String[] args;
     /**
      * 构建一个简单的命令
-     * @param plugin 插件主类
+     * @param plugin 插件
      * @param name 插件名称
      */
-    public PSimpleCommand(JavaPlugin plugin, String name){
+    public PSimpleCommand(JavaPlugin plugin,String name){
         PSimpleCommandBody object = new PSimpleCommandBody(this);
         plugin.getCommand(name).setExecutor(object);
     }
@@ -29,6 +36,7 @@ public abstract class PSimpleCommand {
 }
 class PSimpleCommandBody implements CommandExecutor{
     private PSimpleCommand commanda;
+    public Command command;
     public PSimpleCommandBody(PSimpleCommand command){
         this.commanda = command;
     }
@@ -36,6 +44,7 @@ class PSimpleCommandBody implements CommandExecutor{
     public boolean onCommand(CommandSender commandSender, Command command, String string, String[] strings) {
         commanda.sender = commandSender;
         commanda.command = command;
+        this.command = command;
         commanda.string = string;
         commanda.args = strings;
         commanda.run();

@@ -1,0 +1,23 @@
+package net.bxx2004.pandalib.pfile;
+
+/**
+ * 一个代表文件类型的枚举
+ */
+public enum FileType {
+    /**
+     * YAML文件
+     */
+    YAML,
+    /**
+     * JSON文件
+     */
+    JSON,
+    /**
+     * TXT文件
+     */
+    TXT,
+    /**
+     * 代表一个文件夹
+     */
+    DIR
+}

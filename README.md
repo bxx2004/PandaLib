@@ -5,7 +5,6 @@ Bukkit插件开发前置库
 bxx2004
 
 Bukkit模块代码贡献:
-PuoChen-SA
 bxx2004
 
 BungeeCord模块代码共献:

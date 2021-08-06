@@ -3,7 +3,7 @@ package net.bxx2004.pandalib.bungeecord
 import com.google.common.io.ByteStreams
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
-import net.bxx2004.pandalib.bungeecord.planguage.Lang
+import net.bxx2004.pandalib.bungeecord.planguage.PMessage
 import net.md_5.bungee.api.plugin.Plugin
 import net.md_5.bungee.config.Configuration
 import net.md_5.bungee.config.ConfigurationProvider
@@ -33,12 +33,12 @@ class PandaLib : Plugin(){
             val date = Date()
             val format = SimpleDateFormat("yyyy-MM-dd HH:mm")
             val a = format.format(date)
-            Lang.print("&e┏━━━━━━━━━ PandaLib " + description.version + " ━━━━━━━━━━━━━━━━━━┓")
-            Lang.print("&e┃  &fPandaLib is Running..." + "                   &e┃")
-            Lang.print("&e┃  &6最新版本: &f" + getLastVestion()!!.get(0) + " &7| &6更新时间: &f" + getLastVestion()!!.get(1) + "   &e┃")
-            Lang.print("&e┃  &b作者: &fbxx2004 &7| &fhttp://linyanmc.cn/" + "      &e┃")
-            Lang.print("&e┃  &b交流群: &f1038503485  &7|  &b$a  &e┃")
-            Lang.print("&e┖━━━━━━━━━━ PandaLib ━━━━━━━━━━━━━━━━━━━━━━━┛")
+            PMessage.print("&e┏━━━━━━━━━ PandaLib " + description.version + " ━━━━━━━━━━━━━━━━━━┓")
+            PMessage.print("&e┃  &fPandaLib is Running..." + "                   &e┃")
+            PMessage.print("&e┃  &6最新版本: &f" + getLastVestion()!!.get(0) + " &7| &6更新时间: &f" + getLastVestion()!!.get(1) + "   &e┃")
+            PMessage.print("&e┃  &b作者: &fbxx2004 &7| &fhttp://linyanmc.cn/" + "      &e┃")
+            PMessage.print("&e┃  &b交流群: &f1038503485  &7|  &b$a  &e┃")
+            PMessage.print("&e┖━━━━━━━━━━ PandaLib ━━━━━━━━━━━━━━━━━━━━━━━┛")
         }
     }
     fun getLastVestion(): List<String>? {

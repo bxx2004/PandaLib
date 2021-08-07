@@ -26,4 +26,44 @@ public class SQLUtils {
         }
         return null;
     }
+    /*
+    * @param rs ResultSet
+    * @param stmt Statement
+    * @param connection SQL链接
+    * @param pstmt PreparedStatement
+    * */
+    public static void close(ResultSet rs, Statement stmt, Connection connection, PreparedStatement statement){
+        try{
+            if(rs!=null) {
+                rs.close();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try{
+            if(stmt!=null) {
+                stmt.close();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try{
+            if(connection != null) {
+                connection.close();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try{
+            if(statement != null) {
+                statement.close();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
 }

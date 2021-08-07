@@ -90,7 +90,7 @@ public class PNMS {
     }
 
     /**
-     * 发送数据包
+     * 发送数据包给某个玩家
      * @param player 玩家
      * @param packet 数据包
      */

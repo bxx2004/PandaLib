@@ -1,14 +1,10 @@
 package net.bxx2004.pandalib.manager;
 
 import net.bxx2004.pandalib.PandaLib;
-import net.md_5.bungee.api.ProxyServer;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;

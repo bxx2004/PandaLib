@@ -3,7 +3,6 @@
     <output-path>$PROJECT_DIR$/../../测试库/1.12.2/plugins</output-path>
     <root id="archive" name="PandaLib.jar">
       <element id="module-output" name="PandaLib" />
-      <element id="library" level="project" name="KotlinJavaRuntime" />
     </root>
   </artifact>
 </component>

@@ -73,6 +73,9 @@ public class PJMethod {
     public Object run(Object object){
         this.method = ReflectUtils.getMethod(aClass,methodName,classes);
         try {
+            try {
+                this.method.setAccessible(true);
+            }catch (Exception e){}
             Object res = method.invoke(object,this.objects);
             return res;
         } catch (IllegalAccessException e) {

@@ -11,7 +11,7 @@ public class PMath {
     /**
      * 随机数
      */
-    public static Random random = new Random();
+    private static Random random = new Random();
     /**
      * 获得范围内的随机整数
      * @param max 最大值

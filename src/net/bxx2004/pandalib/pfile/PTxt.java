@@ -35,8 +35,6 @@ public class PTxt implements CustomFile{
      */
     public void println(Object object){
         writer.println(object);
-        writer.close();
-        reload();
     }
     /**
      * 读一整行消息
@@ -53,28 +51,10 @@ public class PTxt implements CustomFile{
         }
         try {
             String a = reader.readLine();
-            try {
-                reader.close();
-                reload();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             return a;
         } catch (IOException ioException) {
             ioException.printStackTrace();
             return null;
-        }
-    }
-
-
-    private void reload(){
-        if (this.writer == null || this.reader == null){
-            this.writer = new PrintWriter(this.fileWriter, true);
-            try {
-                this.reader = new BufferedReader(new FileReader(this.file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -85,5 +65,17 @@ public class PTxt implements CustomFile{
     public Iterator iterator(){
         Iterator iterator = this.reader.lines().iterator();
         return iterator;
+    }
+
+    /**
+     * 关闭流
+     */
+    public void close(){
+        this.writer.close();
+        try {
+            this.reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

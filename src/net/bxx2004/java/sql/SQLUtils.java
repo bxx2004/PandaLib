@@ -1,7 +1,8 @@
 package net.bxx2004.java.sql;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import net.bxx2004.java.reflect.PJMethod;
+
+import java.sql.*;
 
 /**
  * SQL连接工具
@@ -26,11 +27,11 @@ public class SQLUtils {
         }
         return null;
     }
-    /*
+    /**
     * @param rs ResultSet
     * @param stmt Statement
     * @param connection SQL链接
-    * @param pstmt PreparedStatement
+    * @param statement PreparedStatement
     * */
     public static void close(ResultSet rs, Statement stmt, Connection connection, PreparedStatement statement){
         try{
@@ -65,5 +66,14 @@ public class SQLUtils {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 关闭一个流
+     * @param obj 对象
+     */
+    public static void close(Object obj){
+        PJMethod method = new PJMethod(obj.getClass());
+        method.InPutName("close").run(obj);
     }
 }

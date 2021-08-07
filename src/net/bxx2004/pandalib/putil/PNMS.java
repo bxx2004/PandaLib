@@ -4,6 +4,7 @@ import net.bxx2004.java.reflect.PJMethod;
 import net.bxx2004.java.reflect.PJVariable;
 import net.bxx2004.java.reflect.ReflectUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,16 +13,26 @@ import org.bukkit.inventory.ItemStack;
  */
 public class PNMS {
     /**
+     * 是否是1.17及以上服务端版本
+     * @return 是否是1.17及以上服务端版本
+     */
+    public static boolean is1_17UPServer(){
+        if (getVersionForNMS().equalsIgnoreCase("net.minecraft")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    /**
      * 获取当前版本NMS的包名
      * @return 包名
      */
-    @Deprecated
     public static String getVersionForNMS(){
         String[] versions = Bukkit.getBukkitVersion().split("\\.");
         String major = versions[0];
         String minor = versions[1];
         String NMSBaseHead = "net.minecraft.server.v" + major + "_" + minor + "_R";
-        String lastv = "";
+        String lastv = " ";
         for (int i = 1; i <= 9; i++) {
             String versionTest = NMSBaseHead + i;
             try {
@@ -30,7 +41,11 @@ public class PNMS {
                 break;
             } catch (ClassNotFoundException ignored) {}
         }
-        return lastv;
+        if (lastv.equalsIgnoreCase(" ")){
+            return "net.minecraft";
+        }else {
+            return lastv;
+        }
     }
     /**
      * 获取当前版本OBC的包名
@@ -68,7 +83,6 @@ public class PNMS {
      * @param item Bukkit的物品堆
      * @return NMS物品堆
      */
-    @Deprecated
     public static Object getNMSItemStack(ItemStack item){
         PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC()+".inventory.CraftItemStack"));
         Object o = method.InPutName("asNMSCopy").InPutArg(item).run(null);
@@ -80,12 +94,19 @@ public class PNMS {
      * @param player 玩家
      * @param packet 数据包
      */
-    @Deprecated
     public static void sendPacket(Player player, Object packet){
-        PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC() + ".entity.CraftPlayer"),"getHandle");
-        Object hand = method.runMethod(getCraftPlayer(player));
-        PJVariable var = new PJVariable(hand);
-        PJMethod method1 = new PJMethod(ReflectUtils.getClass(getVersionForNMS() + ".PlayerConnection"),"sendPacket",ReflectUtils.getClass(getVersionForNMS() + ".Packet"));
-        method1.runMethod(var.getValue("playerConnection"),packet);
+        if (is1_17UPServer()){
+            PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC() + ".entity.CraftPlayer"),"getHandle");
+            Object hand = method.runMethod(getCraftPlayer(player));
+            PJVariable var = new PJVariable(hand);
+            PJMethod method1 = new PJMethod(ReflectUtils.getClass(getVersionForNMS() + ".server.network.PlayerConnection"));
+            method1.InPutName("sendPacket").InPutArg(packet).run(var.getValue("b"));
+        }else {
+            PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC() + ".entity.CraftPlayer"),"getHandle");
+            Object hand = method.runMethod(getCraftPlayer(player));
+            PJVariable var = new PJVariable(hand);
+            PJMethod method1 = new PJMethod(ReflectUtils.getClass(getVersionForNMS() + ".PlayerConnection"),"sendPacket",ReflectUtils.getClass(getVersionForNMS() + ".Packet"));
+            method1.runMethod(var.getValue("playerConnection"),packet);
+        }
     }
 }

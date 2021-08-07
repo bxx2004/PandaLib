@@ -12,5 +12,7 @@ LIBUPDATE:
 LIBINFO:
   #是否每次开启服务器时显示启动消息
   PRINTMESSAGE: true
+#加载自定义的JAR前置库 填入文件名即可
+LIBS: []
 #END#
 #至此,你已经完成了PandaLib的所有设置#

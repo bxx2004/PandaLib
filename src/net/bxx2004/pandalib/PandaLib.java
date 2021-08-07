@@ -9,7 +9,6 @@ import net.bxx2004.pandalib.manager.Lang;
 import net.bxx2004.pandalib.otherplugin.PVault;
 import net.bxx2004.pandalib.pitem.CustomItem;
 import net.bxx2004.pandalib.pitem.PEnchantment;
-import net.bxx2004.pandalib.plistener.PAdministratorChangEvent;
 import net.bxx2004.pandalib.plistener.PListener;
 import net.bxx2004.pandalib.putil.PMath;
 import net.bxx2004.pandalib.putil.PDownLoad;
@@ -45,8 +44,8 @@ public class PandaLib extends JavaPlugin{
     }
     @Override
     public void onEnable() {
+        DataManager.setJar();
         registerOther();
-        new PAdminEvent();
         Metrics metrics = new Metrics(this, 11609);
         saveDefaultConfig();
         if (DataManager.isINFO()){
@@ -280,27 +279,3 @@ public class PandaLib extends JavaPlugin{
     }
 }
 
-class PAdminEvent{
-    public PAdminEvent(){
-        new BukkitRunnable(){
-            public Set<OfflinePlayer> ops = Bukkit.getOperators();
-            @Override
-            public void run() {
-                if (Bukkit.getOperators().equals(ops)){
-
-                }else {
-                    OfflinePlayer player = null;
-                    for (OfflinePlayer players : Bukkit.getOperators()){
-                        if (!ops.contains(players)){
-                            player = players;
-                            break;
-                        }
-                    }
-                    PAdministratorChangEvent event = new PAdministratorChangEvent(ops,Bukkit.getOperators(),player);
-                    Bukkit.getServer().getPluginManager().callEvent(event);
-                    this.ops = Bukkit.getOperators();
-                }
-            }
-        }.runTaskTimer(PPlugin.getPlugin("PandaLib"),0,20);
-    }
-}

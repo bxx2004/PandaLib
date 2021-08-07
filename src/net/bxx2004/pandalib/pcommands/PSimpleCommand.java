@@ -1,16 +1,9 @@
 package net.bxx2004.pandalib.pcommands;
 
-import net.bxx2004.java.reflect.PJObject;
-import net.bxx2004.java.reflect.PJVariable;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Locale;
 
 /**
  * 简单的命令构建类

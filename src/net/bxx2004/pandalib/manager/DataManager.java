@@ -1,48 +1,20 @@
 package net.bxx2004.pandalib.manager;
 
 import net.bxx2004.pandalib.PandaLib;
+import net.md_5.bungee.api.ProxyServer;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
+import javax.swing.*;
+import java.io.*;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
-    public static void setJar(){
-        File file = new File("plugins/PandaLib/libs");
-        if (!file.exists()){
-            file.mkdirs();
-        }
-        if (loopJar("kotlin-reflect") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-reflect")));
-        }
-        if (loopJar("kotlin-stdlib") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib")));
-        }
-        if (loopJar("kotlin-stdlib-jdk7") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib-jdk7")));
-        }
-        if (loopJar("kotlin-stdlib-jdk8") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib-jdk8")));
-        }
-        if (loopJar("kotlin-test") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-test")));
-        }
-        for (File file1 : getCustomLibs()){
-            JarLoader.loadJarFile(file1);
-        }
-    }
-    private static String loopJar(String name){
-        File file = new File("plugins/PandaLib/libs/" + name + ".jar");
-        if (file.exists()){
-            return file.getAbsolutePath();
-        }else {
-            return null;
-        }
-    }
     public static List<File> getCustomLibs(){
         List<File> list = new ArrayList<>();
         for (String string : getConfig().getStringList("LIBS")){

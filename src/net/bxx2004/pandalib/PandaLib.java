@@ -39,12 +39,14 @@ import static net.bxx2004.pandalib.pitem.PEnchantment.enchantments;
  * @version 1.4.2
  */
 public class PandaLib extends JavaPlugin{
+    static {
+        DataManager.setJar();
+    }
     public static PandaLib getInstance(){
         return PandaLib.getPlugin(PandaLib.class);
     }
     @Override
     public void onEnable() {
-        DataManager.setJar();
         registerOther();
         Metrics metrics = new Metrics(this, 11609);
         saveDefaultConfig();

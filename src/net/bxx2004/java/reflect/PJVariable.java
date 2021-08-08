@@ -13,15 +13,11 @@ public class PJVariable {
     private Class clazz;
     private Object object;
     /**
-     * 根据类名构造
-     * @param className 类名
+     * 根据类构造
+     * @param clazz 类
      */
-    public PJVariable(String className){
-        try {
-            this.clazz = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public PJVariable(Class clazz){
+        this.clazz = clazz;
     }
 
     /**

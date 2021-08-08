@@ -1,6 +1,7 @@
 package net.bxx2004.pandalib;
 
 import net.bxx2004.java.reflect.PJMethod;
+import net.bxx2004.java.reflect.PJObject;
 import net.bxx2004.java.reflect.ReflectUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -36,16 +37,18 @@ public class PandaLibAPI {
      * @param path 目录
      */
     public void loadJarFromPath(String path){
-        PJMethod m = new PJMethod(ReflectUtils.getClass("net.bxx2004.pandalib.manager.JarLoader"));
-        m.InPutName("loadJarPath").InPutArg(path).run(null);
+        PJObject object = new PJObject(ReflectUtils.getClass("net.bxx2004.pandalib.manager.JarLoader"));
+        Object jarloader = object.newObject();
+        object.getPJMthod().InPutName("withLibDir").InPutArg(path).run(jarloader);
     }
     /**
      * 加载一个jar包
-     * @param path jar包路径
+     * @param file 包
      */
-    public void loadJarFromFile(String path){
-        PJMethod m = new PJMethod(ReflectUtils.getClass("net.bxx2004.pandalib.manager.JarLoader"));
-        m.InPutName("loadJarFile").InPutArg(path).run(null);
+    public void loadJarFromFile(File file){
+        PJObject object = new PJObject(ReflectUtils.getClass("net.bxx2004.pandalib.manager.JarLoader"));
+        Object jarloader = object.newObject();
+        object.getPJMthod().InPutName("withFile").InPutArg(file).run(jarloader);
     }
 
     /**

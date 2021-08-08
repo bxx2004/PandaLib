@@ -13,23 +13,31 @@ public class PJObject {
     private Object[] objects;
     /**
      * 构造一个反射类
-     * @param className 类名
+     * @param clazz 类名
      */
-    public PJObject(String className){
-        try {
-            this.clazz = Class.forName(className);
-            this.c = className;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public PJObject(Class clazz){
+        this.clazz = clazz;
+        this.c = clazz.getName();
     }
 
     /**
-     * 构造方法获取对象
+     * 无参构造方法实例化对象
+     * @return 对象
+     */
+    public Object newObject(){
+        try {
+            return this.clazz.newInstance();
+        }catch (Exception e){
+            return null;
+        }
+    }
+    /**
+     * 有参构造方法实例化对象
      * @param args 参数
      * @param objects 参数
      * @return 对象
      */
+    @Deprecated
     public Object newObject(Class[] args,Object[] objects){
         try {
             this.args = args;
@@ -44,24 +52,40 @@ public class PJObject {
     }
 
     /**
+     * 有参构造方法实例化对象
+     * @param args 参数
+     * @return 对象
+     */
+    public Object newObject(Object... args){
+        try {
+            for (int i = 0; i < args.length; i++){
+                this.args[i] = args[i].getClass();
+            }
+            Constructor c = this.clazz.getConstructor(this.args);
+            c.setAccessible(true);
+            return c.newInstance(args);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
      * 获取PJ变量对象
      * @param isobject 是否为对象形式
      * @return 变量对象
      */
     public PJVariable getPJVariable(boolean isobject){
         if (isobject){
-            return new PJVariable(newObject(this.args,this.objects));
+            return new PJVariable(newObject(this.args));
         }else {
             return new PJVariable(c);
         }
     }
     /**
      * 获取PJ方法对象
-     * @param methodName 方法名
-     * @param c 参数
      * @return 方法对象
      */
-    public PJMethod getPJMthod(String methodName,Class... c){
-        return new PJMethod(clazz,methodName,c);
+    public PJMethod getPJMthod(){
+        return new PJMethod(clazz);
     }
 }

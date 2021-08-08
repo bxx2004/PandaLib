@@ -2,43 +2,45 @@ package net.bxx2004.pandalib.manager;
 
 import net.bxx2004.pandalib.PandaLib;
 import net.bxx2004.pandalib.pfile.PYml;
+import net.md_5.bungee.api.ProxyServer;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.*;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 public class DataManager {
     public static void setJar(){
-        JarLoader loader = new JarLoader();
         File file = new File("plugins/PandaLib/libs");
         if (!file.exists()){
             file.mkdirs();
         }
         if (loopJar("kotlin-reflect") != null){
             System.out.println(loopJar("kotlin-reflect"));
-            loader.withFile(new File(loopJar("kotlin-reflect")));
+            JarLoader.loadJarFile(new File(loopJar("kotlin-reflect")));
         }
         if (loopJar("kotlin-stdlib") != null){
-            loader.withFile(new File(loopJar("kotlin-stdlib")));
+            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib")));
         }
         if (loopJar("kotlin-stdlib-jdk7") != null){
-            loader.withFile(new File(loopJar("kotlin-stdlib-jdk7")));
+            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib-jdk7")));
         }
         if (loopJar("kotlin-stdlib-jdk8") != null){
-            loader.withFile(new File(loopJar("kotlin-stdlib-jdk8")));
+            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib-jdk8")));
         }
         if (loopJar("kotlin-test") != null){
-            loader.withFile(new File(loopJar("kotlin-test")));
+            JarLoader.loadJarFile(new File(loopJar("kotlin-test")));
         }
         for (File file1 : getCustomLibs()){
-            loader.withFile(file1);
+            JarLoader.loadJarFile(file1);
         }
     }
     private static String loopJar(String name){
@@ -69,29 +71,69 @@ public class DataManager {
         return PandaLib.getInstance().getConfig().getBoolean("LIBINFO.PRINTMESSAGE");
     }
 }
-final class JarLoader extends URLClassLoader{
+final class JarLoader{
+    private static Method addURL = initAddMethod();
 
-    public JarLoader() {
-        super(new URL[]{});
-    }
-    public JarLoader withFile(String jarFile) {
-        return withFile(new File(jarFile));
-    }
-
-    public JarLoader withFile(File jarFile) {
+    /** 初始化方法 */
+    private static final Method initAddMethod() {
         try {
-            if (jarFile.exists()){
-                addURL(jarFile.toURI().toURL());
-            }
-            Lang.print("正在加载依赖项-> " + jarFile.getAbsolutePath());
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException(e);
+            Method add = URLClassLoader.class
+                    .getDeclaredMethod("addURL", new Class[] { URL.class });
+            add.setAccessible(true);
+            return add;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return this;
+        return null;
     }
 
-    public JarLoader withLibDir(String path) {
-        Stream.of(new File(path).listFiles(f -> f.getName().endsWith(".jar"))).forEach(this::withFile);
-        return this;
+    private static URLClassLoader system = (URLClassLoader) ClassLoader.getSystemClassLoader();
+
+    /**
+     * 循环遍历目录，找出所有的JAR包
+     */
+    private static final void loopFiles(File file, List<File> files) {
+        if (file.isDirectory()) {
+            File[] tmps = file.listFiles();
+            for (File tmp : tmps) {
+                loopFiles(tmp, files);
+            }
+        } else {
+            if (file.getAbsolutePath().endsWith(".jar") || file.getAbsolutePath().endsWith(".zip")) {
+                files.add(file);
+            }
+        }
+    }
+
+    /**
+     * <pre>
+     * 加载JAR文件
+     * </pre>
+     *
+     * @param file
+     */
+    public static final void loadJarFile(File file) {
+        try {
+            addURL.invoke(system, new Object[] { file.toURI().toURL() });
+            ProxyServer.getInstance().getConsole().sendMessage("§b[§f PandaLib §b] §f- §7正在加载依赖项-> " + file.getAbsolutePath().replaceAll("§", "§"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * <pre>
+     * 从一个目录加载所有JAR文件
+     * </pre>
+     *
+     * @param path
+     */
+    public static final void loadJarPath(String path) {
+        List<File> files = new ArrayList<File>();
+        File lib = new File(path);
+        loopFiles(lib, files);
+        for (File file : files) {
+            loadJarFile(file);
+        }
     }
 }

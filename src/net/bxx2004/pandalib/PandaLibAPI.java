@@ -38,8 +38,7 @@ public class PandaLibAPI {
      */
     public void loadJarFromPath(String path){
         PJObject object = new PJObject(ReflectUtils.getClass("net.bxx2004.pandalib.manager.JarLoader"));
-        Object jarloader = object.newObject();
-        object.getPJMthod().InPutName("withLibDir").InPutArg(path).run(jarloader);
+        object.getPJMthod().InPutName("loadJarPath").InPutArg(path).run(null);
     }
     /**
      * 加载一个jar包
@@ -47,8 +46,7 @@ public class PandaLibAPI {
      */
     public void loadJarFromFile(File file){
         PJObject object = new PJObject(ReflectUtils.getClass("net.bxx2004.pandalib.manager.JarLoader"));
-        Object jarloader = object.newObject();
-        object.getPJMthod().InPutName("withFile").InPutArg(file).run(jarloader);
+        object.getPJMthod().InPutName("loadJarFile").InPutArg(file).run(null);
     }
 
     /**

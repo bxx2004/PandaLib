@@ -99,8 +99,8 @@ public class PNMS {
             PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC() + ".entity.CraftPlayer"),"getHandle");
             Object hand = method.runMethod(getCraftPlayer(player));
             PJVariable var = new PJVariable(hand);
-            PJMethod method1 = new PJMethod(ReflectUtils.getClass(getVersionForNMS() + ".server.network.PlayerConnection"));
-            method1.InPutName("sendPacket").InPutArg(packet).run(var.getValue("b"));
+            PJMethod method1 = new PJMethod(ReflectUtils.getClass(getVersionForNMS() + ".server.network.PlayerConnection"),"sendPacket",ReflectUtils.getClass(getVersionForNMS() + ".network.protocol.Packet"));
+            method1.runMethod(var.getValue("b"),packet);
         }else {
             PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC() + ".entity.CraftPlayer"),"getHandle");
             Object hand = method.runMethod(getCraftPlayer(player));

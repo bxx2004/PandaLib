@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class CustomItem extends ItemStack {
     /**
@@ -143,6 +144,22 @@ public class CustomItem extends ItemStack {
     }
 
     /**
+     * 根据正则表达式匹配Lore
+     * @param regx 正则表达式
+     * @return 所有行匹配结果
+     */
+    public String[] searchLore(String regx){
+        List<String> list = new ArrayList<>();
+        Pattern pattern = Pattern.compile(regx);
+        for (String lore : super.getItemMeta().getLore()){
+            String result = pattern.matcher(lore).replaceAll("");
+            if (!result.equalsIgnoreCase("")){
+                list.add(result);
+            }
+        }
+        return list.toArray(new String[list.size()]);
+    }
+    /**
      * @since 1.5.3
      * 将这个物品对象转化为字符串形式(适用Yaml)
      * @return 字符串
@@ -172,7 +189,6 @@ public class CustomItem extends ItemStack {
         }
         return buffer.toString();
     }
-
     /**
      * 从一个字符串特定格式读取一个CustomItem对象(适用Yaml)
      * @since 1.5.3

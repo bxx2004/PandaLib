@@ -117,7 +117,7 @@ public class MySQLData implements SQLData {
     /**
      * MySQL数据类型枚举
      */
-    enum MySQLDataType{
+    public enum MySQLDataType{
         TINYINT,
         SMALLINT,
         MEDIUMINT,

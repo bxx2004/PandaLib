@@ -7,6 +7,9 @@ import net.bxx2004.java.sql.SQLHandler;
 import java.sql.Connection;
 
 public class MySQL implements SQLHandler {
+    public MySQL(MySQLConnection connection){
+        this.connection = connection;
+    }
     public MySQLConnection connection;
     @Override
     public void set(SQLConnection connection) {
@@ -21,12 +24,12 @@ public class MySQL implements SQLHandler {
             datalang += "ID INT PRIMARY KEY AUTO_INCREMENT, ";
             for (SQLData d : data){
                 MySQLData mySQLData = (MySQLData) d;
-                datalang += mySQLData.type.name() + " " + mySQLData.name + ", ";
+                datalang += mySQLData.name + " " + mySQLData.type.name() + ", ";
             }
         }else {
             for (SQLData d : data){
                 MySQLData mySQLData = (MySQLData) d;
-                datalang += mySQLData.type.name() + " " + mySQLData.name + ", ";
+                datalang += mySQLData.name + " " + mySQLData.type.name() + ", ";
             }
         }
         sql += datalang.substring(0,datalang.length() - 2);

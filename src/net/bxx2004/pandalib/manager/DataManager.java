@@ -2,45 +2,39 @@ package net.bxx2004.pandalib.manager;
 
 import net.bxx2004.pandalib.PandaLib;
 import net.bxx2004.pandalib.pfile.PYml;
-import net.md_5.bungee.api.ProxyServer;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.*;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Stream;
 
 public class DataManager {
     public static void setJar(){
-        File file = new File("plugins/PandaLib/libs");
-        if (!file.exists()){
-            file.mkdirs();
-        }
-        if (loopJar("kotlin-reflect") != null){
-            System.out.println(loopJar("kotlin-reflect"));
-            JarLoader.loadJarFile(new File(loopJar("kotlin-reflect")));
-        }
-        if (loopJar("kotlin-stdlib") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib")));
-        }
-        if (loopJar("kotlin-stdlib-jdk7") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib-jdk7")));
-        }
-        if (loopJar("kotlin-stdlib-jdk8") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib-jdk8")));
-        }
-        if (loopJar("kotlin-test") != null){
-            JarLoader.loadJarFile(new File(loopJar("kotlin-test")));
-        }
-        for (File file1 : getCustomLibs()){
-            JarLoader.loadJarFile(file1);
+        String i = System.getProperty("java.version").split(".")[0];
+        if (Integer.parseInt(i) >= 16){
+            Lang.print("§b[§f PandaLib §b] §f- §7由于你使用了 Java16 所以您无法加载更多服务".replaceAll("§", "§"));
+        }else {
+            File file = new File("plugins/PandaLib/libs");
+            if (!file.exists()){
+                file.mkdirs();
+            }
+            if (loopJar("kotlin-reflect") != null){
+                JarLoader.loadJarFile(new File(loopJar("kotlin-reflect")));
+            }
+            if (loopJar("kotlin-stdlib") != null){
+                JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib")));
+            }
+            if (loopJar("kotlin-stdlib-jdk7") != null){
+                JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib-jdk7")));
+            }
+            if (loopJar("kotlin-stdlib-jdk8") != null){
+                JarLoader.loadJarFile(new File(loopJar("kotlin-stdlib-jdk8")));
+            }
+            if (loopJar("kotlin-test") != null){
+                JarLoader.loadJarFile(new File(loopJar("kotlin-test")));
+            }
         }
     }
     private static String loopJar(String name){
@@ -115,7 +109,7 @@ final class JarLoader{
     public static final void loadJarFile(File file) {
         try {
             addURL.invoke(system, new Object[] { file.toURI().toURL() });
-            ProxyServer.getInstance().getConsole().sendMessage("§b[§f PandaLib §b] §f- §7正在加载依赖项-> " + file.getAbsolutePath().replaceAll("§", "§"));
+            Lang.print("§b[§f PandaLib §b] §f- §7正在加载依赖项-> " + file.getAbsolutePath().replaceAll("§", "§"));
         } catch (Exception e) {
             e.printStackTrace();
         }

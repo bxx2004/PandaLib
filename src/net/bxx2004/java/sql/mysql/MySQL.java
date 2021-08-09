@@ -5,8 +5,15 @@ import net.bxx2004.java.sql.SQLData;
 import net.bxx2004.java.sql.SQLHandler;
 
 import java.sql.Connection;
+import java.sql.Statement;
 
+/**
+ * MySQL便捷操作
+ */
 public class MySQL implements SQLHandler {
+    public MySQL(){
+
+    }
     public MySQL(MySQLConnection connection){
         this.connection = connection;
     }
@@ -19,20 +26,28 @@ public class MySQL implements SQLHandler {
     @Override
     public void createTable(String name, boolean primary_key_ID, SQLData... data) {
         String datalang = "";
-        String sql = "CREATE TABLE " + name + " (" + datalang + ")";
         if (primary_key_ID){
             datalang += "ID INT PRIMARY KEY AUTO_INCREMENT, ";
             for (SQLData d : data){
                 MySQLData mySQLData = (MySQLData) d;
-                datalang += mySQLData.name + " " + mySQLData.type.name() + ", ";
+                if (mySQLData.addData != 0){
+                    datalang += mySQLData.name + " " + mySQLData.type.name() + "(" + mySQLData.addData +"), ";
+                }else {
+                    datalang += mySQLData.name + " " + mySQLData.type.name() + ", ";
+                }
             }
         }else {
             for (SQLData d : data){
                 MySQLData mySQLData = (MySQLData) d;
-                datalang += mySQLData.name + " " + mySQLData.type.name() + ", ";
+                if (mySQLData.addData != 0){
+                    datalang += mySQLData.name + " " + mySQLData.type.name() + "(" + mySQLData.addData +"), ";
+                }else {
+                    datalang += mySQLData.name + " " + mySQLData.type.name() + ", ";
+                }
             }
         }
-        sql += datalang.substring(0,datalang.length() - 2);
+        datalang = datalang.substring(0,datalang.length() - 2);
+        String sql = "CREATE TABLE " + name + "(" + datalang + ")";
         run(sql);
     }
 
@@ -42,12 +57,27 @@ public class MySQL implements SQLHandler {
     }
     private void run(String sql){
         try {
-            connection.getConnection().createStatement().execute(sql);
+            Statement statement = this.connection.getConnection().createStatement();
+            statement.execute(sql);
+            statement.close();
         }catch (Exception E){
             E.printStackTrace();
         }
     }
 
+    /**
+     * 执行MySQL语句
+     * @param sql 语句
+     */
+    public void excute(String sql){
+        try {
+            Statement statement = this.connection.getConnection().createStatement();
+            statement.execute(sql);
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     /**
      * 获得MySQLBase对象
      * @param tableName 要操作的表

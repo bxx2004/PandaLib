@@ -1,16 +1,13 @@
 package net.bxx2004.java.sql.mysql;
 
-import net.bxx2004.java.sql.SQL;
-import net.bxx2004.java.sql.SQLBase;
-import net.bxx2004.java.sql.SQLData;
-import net.bxx2004.java.sql.SQLPlatForm;
+import net.bxx2004.java.sql.*;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * MySQL基本操作
@@ -35,14 +32,27 @@ public class MySQLBase implements SQLBase{
         for (SQLData arg : data){
             MySQLData mySQLData = (MySQLData) arg;
             namesql += mySQLData.row + ", ";
-            valueSize += mySQLData.valueAsString() + ",";
+            valueSize += "'" + mySQLData.valueAsString() + "',";
         }
         namesql = namesql.substring(0,namesql.length() -2);
         valueSize = valueSize.substring(0,valueSize.length() -1);
         String sql = "insert into " + tableName + "(" + namesql + ") values("+ valueSize +")";
+        System.out.println(sql);
         run(sql);
     }
 
+    @Override
+    @SQL(platform = SQLPlatForm.MYSQL,type = Type.DELETE)
+    public void delete(SQLDataTerm... data) {
+        String terms = "";
+        for (SQLDataTerm arg : data){
+            MySQLDataTerm dataTerm = (MySQLDataTerm) arg;
+            terms += dataTerm.rowName + "='" + dataTerm.value + "' and ";
+        }
+        terms = terms.substring(0,terms.length() - 4);
+        String sql = "delete from " + tableName + " where " + terms;
+        run(sql);
+    }
     @Override
     @SQL(platform = SQLPlatForm.MYSQL,type = Type.DELETE)
     public void delete(SQLData... data) {
@@ -58,7 +68,6 @@ public class MySQLBase implements SQLBase{
             run(sql);
         }
     }
-
     @Override
     @SQL(platform = SQLPlatForm.MYSQL,type = Type.UPDATE)
     public void update(SQLData... data) {
@@ -77,16 +86,15 @@ public class MySQLBase implements SQLBase{
 
     @Override
     @SQL(platform = SQLPlatForm.MYSQL,type = Type.SELECT)
-    public List<HashMap> select(SQLData data) {
+    public List<HashMap> select(SQLDataTerm... data) {
         try {
             String terms = "";
-            MySQLData mySQLData = (MySQLData) data;
-            MySQLDataTerm[] term = mySQLData.terms;
-            for (MySQLDataTerm t : term){
+            for (SQLDataTerm ta : data){
+                MySQLDataTerm t = (MySQLDataTerm) ta;
                 terms += t.rowName + "='" + t.value + "' and ";
             }
             terms = terms.substring(0,terms.length() - 4);
-            String sql = "select * from " + tableName + "where "+terms;
+            String sql = "select * from " + tableName + " where "+terms;
             ResultSet rs = runQuery(sql);
             return asList(rs);
         }catch (Exception e){
@@ -96,7 +104,9 @@ public class MySQLBase implements SQLBase{
     }
     private void run(String sql){
         try {
-            connection.getConnection().createStatement().execute(sql);
+            Statement statement = this.connection.getConnection().createStatement();
+            statement.execute(sql);
+            statement.close();
         }catch (Exception e){
             e.printStackTrace();
         }

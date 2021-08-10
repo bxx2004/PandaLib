@@ -1,6 +1,6 @@
 package net.bxx2004.pandalib.pitem;
 
-import net.bxx2004.pandalib.plistener.PEnchantRegisterEvent;
+import net.bxx2004.pandalib.plistener.event.PEnchantRegisterEvent;
 import net.bxx2004.pandalib.plistener.PListener;
 import net.bxx2004.pandalib.putil.PPlugin;
 import org.bukkit.Bukkit;

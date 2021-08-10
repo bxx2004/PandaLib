@@ -12,8 +12,8 @@ import java.util.*;
 
 public class DataManager {
     public static void setJar(){
-        String i = System.getProperty("java.version").split(".")[0];
-        if (Integer.parseInt(i) >= 16){
+        String i = System.getProperty("java.version").substring(0,2);
+        if (i.contains("16")){
             Lang.print("§b[§f PandaLib §b] §f- §7由于你使用了 Java16 所以您无法加载更多服务".replaceAll("§", "§"));
         }else {
             File file = new File("plugins/PandaLib/libs");

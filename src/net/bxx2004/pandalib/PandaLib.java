@@ -10,12 +10,11 @@ import net.bxx2004.pandalib.otherplugin.PVault;
 import net.bxx2004.pandalib.pitem.CustomItem;
 import net.bxx2004.pandalib.pitem.PEnchantment;
 import net.bxx2004.pandalib.plistener.PListener;
+import net.bxx2004.pandalib.plistener.event.PandaLibExtendEvent;
 import net.bxx2004.pandalib.putil.PMath;
 import net.bxx2004.pandalib.putil.PDownLoad;
 import net.bxx2004.pandalib.putil.PPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
@@ -67,14 +66,14 @@ public class PandaLib extends JavaPlugin{
                     System.out.println("PandaLib 当前无更新...");
                 }else {
                     if (DataManager.getConfig().getBoolean("LIBUPDATE.UPDATEMESSAGE")){
-                        if (getConfig().getString("LIBUPDATE.DOWNLOADUPATH").equalsIgnoreCase("none")){
+                        if (getConfig().getString("LIBUPDATE.DOWNLOADPATH").equalsIgnoreCase("none")){
                         }else {
                             File file = new File("plugins/PandaLib/version");
                             if (!file.exists()){
                                 file.mkdir();
                             }
                             System.out.println("正在为您下载最新版本的PandaLib到目录...");
-                            if (getConfig().getString("LIBUPDATE.DOWNLOADUPATH").contains("!")){
+                            if (getConfig().getString("LIBUPDATE.DOWNLOADPATH").contains("!")){
                                 PDownLoad load = new PDownLoad("http://linyanmc.cn/PandaLib/PandaLib.jar", getConfig().getString("LIBUPDATE.DOWNLOADUPATH").replaceAll("!","") + "/PandaLib-"+getLastVestion()+".jar", this);
                                 load.start();
                             }else {

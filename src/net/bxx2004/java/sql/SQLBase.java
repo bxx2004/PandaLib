@@ -39,7 +39,7 @@ public interface SQLBase {
      * @return 查询到的数据
      */
     public List<HashMap> select(SQLDataTerm... term);
-    enum Type{
+    public enum Type{
         INSERT,
         DELETE,
         UPDATE,

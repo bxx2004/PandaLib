@@ -1,4 +1,4 @@
-package net.bxx2004.pandalib.plistener;
+package net.bxx2004.pandalib.plistener.event;
 
 import net.bxx2004.pandalib.pitem.PEnchantment;
 import org.bukkit.event.Cancellable;

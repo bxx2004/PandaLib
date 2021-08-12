@@ -2,7 +2,7 @@ package net.bxx2004.pandalib.pfile;
 
 import net.bxx2004.pandalib.pgui.CustomGui;
 import net.bxx2004.pandalib.pitem.CustomItem;
-import net.bxx2004.pandalib.planguage.PAnalysis;
+import net.bxx2004.pandalib.planguage.PAction;
 import net.bxx2004.pandalib.plistener.PListener;
 import net.bxx2004.pandalib.putil.PPlugin;
 import org.bukkit.Material;
@@ -65,7 +65,7 @@ public class PMenuBuilder {
                         if (event.getCurrentItem() != null || event.getCurrentItem().getType() != Material.AIR){
                             char key = index2[event.getRawSlot()];
                             for (String s : getAction(String.valueOf(key))){
-                                PAnalysis.go((Player) event.getWhoClicked(),s);
+                                PAction.go((Player) event.getWhoClicked(),s);
                             }
                         }
                         if (!keep){

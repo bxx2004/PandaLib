@@ -13,12 +13,16 @@ import java.util.HashMap;
 public abstract class PAction{
     private static HashMap<String,PActionObject> map = new HashMap<String, PActionObject>();
     public PAction(String key){
-        map.put(key, new PActionObject() {
-            @Override
-            void vaule(Player player1,String... args) {
-                run(player1, args);
-            }
-        });
+        if (!map.keySet().contains(key)){
+            map.put(key, new PActionObject() {
+                @Override
+                void vaule(Player player1,String... args) {
+                    run(player1, args);
+                }
+            });
+        }else {
+            Lang.print("&c[&fPAaction&c] &c无法为该动作 &f" + key +" &c注册,因为一个存在了一个名称相同的动作...");
+        }
     }
     public abstract void run(Player player,String... args);
 

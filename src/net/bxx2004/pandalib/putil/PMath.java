@@ -1,7 +1,5 @@
 package net.bxx2004.pandalib.putil;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 /**

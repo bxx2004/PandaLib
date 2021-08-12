@@ -4,17 +4,21 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.bxx2004.Metrics;
+import net.bxx2004.java.reflect.PJVariable;
+import net.bxx2004.java.reflect.ReflectUtils;
 import net.bxx2004.pandalib.manager.DataManager;
 import net.bxx2004.pandalib.manager.Lang;
 import net.bxx2004.pandalib.otherplugin.PVault;
+import net.bxx2004.pandalib.pcommands.PSimpleCommand;
 import net.bxx2004.pandalib.pitem.CustomItem;
 import net.bxx2004.pandalib.pitem.PEnchantment;
+import net.bxx2004.pandalib.planguage.PMessage;
 import net.bxx2004.pandalib.plistener.PListener;
-import net.bxx2004.pandalib.plistener.event.PandaLibExtendEvent;
 import net.bxx2004.pandalib.putil.PMath;
 import net.bxx2004.pandalib.putil.PDownLoad;
 import net.bxx2004.pandalib.putil.PPlugin;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
@@ -47,6 +51,7 @@ public class PandaLib extends JavaPlugin{
     @Override
     public void onEnable() {
         registerOther();
+        registerCommand();
         Metrics metrics = new Metrics(this, 11609);
         saveDefaultConfig();
         if (DataManager.isINFO()){
@@ -277,6 +282,38 @@ public class PandaLib extends JavaPlugin{
             PVault.register();
             Lang.print("检测到 Vault 插件,相关功能已经注册!");
         }
+    }
+    private void registerCommand(){
+        new PSimpleCommand(this,"PandaLib"){
+            @Override
+            public void run() {
+                if (args.length < 1){
+                    sender.sendMessage("请输入参数...");
+                    return;
+                }
+                if (args[0].equalsIgnoreCase("action")){
+                    PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.planguage.PAnalysis"));
+                    HashMap map = (HashMap) var.getValue("map");
+                    sender.sendMessage("- PandaLib | 动作");
+                    for (Object s : map.keySet()){
+                        sender.sendMessage(String.valueOf(s));
+                    }
+                }
+                if (args[0].equalsIgnoreCase("enchants")){
+                    PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.pitem.PEnchantment"));
+                    List<PEnchantment> enchantments = (List<PEnchantment>) var.getValue("enchantments");
+                    sender.sendMessage("- PandaLib | 附魔");
+                    for (PEnchantment s : enchantments){
+                        sender.sendMessage(s.getPluginName() + " - " + s.getEnchantName());
+                    }
+                }
+                if (args[0].equalsIgnoreCase("gc")){
+                    sender.sendMessage("执行成功");
+                    System.gc();
+                }
+            }
+        };
+
     }
 }
 

@@ -19,6 +19,9 @@ public class PVarChar {
             newmap = new HashMap<String, PVarCharValue>();
         }
     }
+    public PVarChar(){
+        newmap = new HashMap<String, PVarCharValue>();
+    }
     /**
      * 放入一个变量
      * @param key 对应值
@@ -95,14 +98,6 @@ public class PVarChar {
         return method.InPutName(map.get(key).getMe()).InPutArg(map.get(key).getObjects()).run(ob);
     }
     /**
-     * 获取该对象
-     * @return 该对象
-     */
-    @Deprecated
-    public static PVarChar create(){
-        return new PVarChar(true) {};
-    }
-    /**
      * 放入一个变量
      * @param key 对应值
      * @param new_ 新的
@@ -137,6 +132,4 @@ class PVarCharObject{
         return objects;
     }
 }
-abstract class PVarCharValue{
-    abstract public Object vaule();
-}
+

@@ -35,11 +35,30 @@ public class PMath {
      * @param number Int
      * @return 和
      */
+    @Deprecated
     public static int sum(int... number){
         int b = 0;
         for (int a : number){
             b = b + a;
         }
         return b;
+    }
+
+    /**
+     * 从一个数组里面获取随机字符串
+     * @param strings 数组
+     * @return 随机的字符串
+     */
+    public static String getRandomAsString(String... strings){
+        return strings[PMath.getRandomAsInt(0,strings.length-1)];
+    }
+
+    /**
+     * 将小数保留小数点后两位
+     * @param x 小数
+     * @return 格式化的字符串
+     */
+    public static String formatDouble(double x){
+        return String.format("%.2f", x);
     }
 }

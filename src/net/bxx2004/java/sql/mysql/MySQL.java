@@ -5,6 +5,8 @@ import net.bxx2004.java.sql.SQLData;
 import net.bxx2004.java.sql.SQLHandler;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
@@ -63,6 +65,21 @@ public class MySQL implements SQLHandler {
         }catch (Exception E){
             E.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean exist(String tableName) {
+        boolean b;
+        try {
+            DatabaseMetaData meta = connection.getConnection().getMetaData();
+            ResultSet resultSet = meta.getTables(null, null, tableName, new String[]{"TABLE"});
+            b = resultSet.next();
+            resultSet.close();
+            return b;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

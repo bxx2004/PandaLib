@@ -65,7 +65,7 @@ public class PMenuBuilder {
                         if (event.getCurrentItem() != null || event.getCurrentItem().getType() != Material.AIR){
                             char key = index2[event.getRawSlot()];
                             for (String s : getAction(String.valueOf(key))){
-                                PAction.go((Player) event.getWhoClicked(),s);
+                                PAction.go(s, (Player) event.getWhoClicked());
                             }
                         }
                         if (!keep){

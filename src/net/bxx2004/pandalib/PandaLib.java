@@ -12,11 +12,15 @@ import net.bxx2004.pandalib.otherplugin.PVault;
 import net.bxx2004.pandalib.pcommands.PSimpleCommand;
 import net.bxx2004.pandalib.pitem.CustomItem;
 import net.bxx2004.pandalib.pitem.PEnchantment;
+import net.bxx2004.pandalib.planguage.PAction;
+import net.bxx2004.pandalib.planguage.PActionBar;
 import net.bxx2004.pandalib.planguage.PMessage;
+import net.bxx2004.pandalib.planguage.PTitle;
 import net.bxx2004.pandalib.plistener.PListener;
 import net.bxx2004.pandalib.putil.PMath;
 import net.bxx2004.pandalib.putil.PDownLoad;
 import net.bxx2004.pandalib.putil.PPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,6 +56,7 @@ public class PandaLib extends JavaPlugin{
     public void onEnable() {
         registerOther();
         registerCommand();
+        registerAction();
         Metrics metrics = new Metrics(this, 11609);
         saveDefaultConfig();
         if (DataManager.isINFO()){
@@ -283,20 +288,75 @@ public class PandaLib extends JavaPlugin{
             Lang.print("检测到 Vault 插件,相关功能已经注册!");
         }
     }
+    private void registerAction(){
+        new PAction("tell"){
+            @Override
+            public void run(Player player, String... args) {
+                PMessage.to(player,args[0]);
+            }
+        };
+        new PAction("title"){
+            @Override
+            public void run(Player player, String... args) {
+                if (args.length > 1){
+                    PTitle.To(player,args[0] + "&nbsp" + args[1]);
+                }else {
+                    PTitle.To(player,args[0]);
+                }
+            }
+        };
+        new PAction("actionbar"){
+            @Override
+            public void run(Player player, String... args) {
+                PActionBar.To(player,args[0]);
+            }
+        };
+        new PAction("close"){
+            @Override
+            public void run(Player player, String... args) {
+                player.closeInventory();
+            }
+        };
+        new PAction("command"){
+            @Override
+            public void run(Player player, String... args) {
+                String way = args[0];
+                String command = "";
+                for (int a = 1; a< args.length ; a++){
+                    command += (args[a] + " ");
+                }
+                if (way.equalsIgnoreCase("player")){
+                    Bukkit.dispatchCommand(player,command.replaceAll("<PLAYER>",player.getName()));
+                }
+                if (way.equalsIgnoreCase("op")){
+                    if (!player.isOp()){
+                        player.setOp(true);
+                        Bukkit.dispatchCommand(player,command.replaceAll("<PLAYER>",player.getName()));
+                        player.setOp(false);
+                    }else {
+                        Bukkit.dispatchCommand(player,command.replaceAll("<PLAYER>",player.getName()));
+                    }
+                }
+                if (way.equalsIgnoreCase("console")){
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),command.replaceAll("<PLAYER>",player.getName()));
+                }
+            }
+        };
+    }
     private void registerCommand(){
         new PSimpleCommand(this,"PandaLib"){
             @Override
             public void run() {
                 if (args.length < 1){
-                    sender.sendMessage("请输入参数...");
+                    sender.sendMessage("[PandaLib] - 请输入参数...");
                     return;
                 }
                 if (args[0].equalsIgnoreCase("action")){
-                    PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.planguage.PAnalysis"));
+                    PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.planguage.PAction"));
                     HashMap map = (HashMap) var.getValue("map");
                     sender.sendMessage("- PandaLib | 动作");
                     for (Object s : map.keySet()){
-                        sender.sendMessage(String.valueOf(s));
+                        sender.sendMessage(" - " + s);
                     }
                 }
                 if (args[0].equalsIgnoreCase("enchants")){
@@ -308,7 +368,7 @@ public class PandaLib extends JavaPlugin{
                     }
                 }
                 if (args[0].equalsIgnoreCase("gc")){
-                    sender.sendMessage("执行成功");
+                    sender.sendMessage("成功启动Java内存回收...");
                     System.gc();
                 }
             }

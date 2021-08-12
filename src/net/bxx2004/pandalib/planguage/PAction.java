@@ -12,7 +12,8 @@ import java.util.HashMap;
  */
 public abstract class PAction{
     private static HashMap<String,PActionObject> map = new HashMap<String, PActionObject>();
-    public PAction(String key){
+    public PAction(String word){
+       String key = word.toLowerCase();
         if (!map.keySet().contains(key)){
             map.put(key, new PActionObject() {
                 @Override
@@ -21,7 +22,7 @@ public abstract class PAction{
                 }
             });
         }else {
-            Lang.print("&c[&fPAaction&c] &c无法为该动作 &f" + key +" &c注册,因为一个存在了一个名称相同的动作...");
+            Lang.print("&c[&fPAction&c] &c无法为该动作 &f" + key +" &c注册,因为一个存在了一个名称相同的动作...");
         }
     }
     public abstract void run(Player player,String... args);
@@ -32,7 +33,7 @@ public abstract class PAction{
      * @param player 玩家
      */
     public static void go(String word,Player player){
-        String words = word.split(" ")[0];
+        String words = word.split(" ")[0].toLowerCase();
         String[] args = word.split(" ");
         String[] args1 = new String[args.length - 1];
         for (int i = 0; i < args.length; i++){
@@ -55,44 +56,7 @@ public abstract class PAction{
      * @return 是否存在
      */
     public static boolean has(String word){
-        return map.keySet().contains(word);
-    }
-    /**
-     * 执行特殊的动作(已过时)
-     * @param player 玩家
-     * @param text 文本
-     */
-    @Deprecated
-    public static void go(Player player, String text){
-        String[] t = text.split(" ");
-        String t1 = t[1].replaceAll("<player>",player.getName());
-        if (t[0].equals("[MESSAGE]")){
-            PMessage.to(player,t1);
-        }
-        if (t[0].equals("[TITLE]")){
-            PTitle.To(player,t1);
-        }
-        if (t[0].equals("[ACTIONBAR]")){
-            PActionBar.To(player,t1);
-        }
-        if (t[0].equals("[COMMAND=PLAYER]")){
-            Bukkit.dispatchCommand(player, t1);
-        }
-        if (t[0].equals("[COMMAND=CONSOLE]")){
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), t1);
-        }
-        if (t[0].equals("[CLOSE]")){
-            player.closeInventory();
-        }
-        if (t[0].equals("[COMMAND=OP]")){
-            if (player.isOp()){
-                Bukkit.dispatchCommand(player, t1);
-            }else {
-                player.setOp(true);
-                Bukkit.dispatchCommand(player, t1);
-                player.setOp(false);
-            }
-        }
+        return map.keySet().contains(word.toLowerCase());
     }
 }
 abstract class PActionObject{

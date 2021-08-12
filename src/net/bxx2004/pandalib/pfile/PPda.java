@@ -4,6 +4,7 @@ import net.bxx2004.pandalib.manager.Lang;
 import net.bxx2004.pandalib.planguage.PAction;
 import org.bukkit.entity.Player;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 public class PPda{
@@ -54,7 +55,10 @@ public class PPda{
      * @param i 某行
      */
     public void run(int i,Player player){
-        PAction.go(txt.read(i),player);
+        String a = txt.read(i);
+        if (!a.trim().isEmpty()){
+            PAction.go(a,player);
+        }
     }
     /**
      * 执行该文件所有动作
@@ -63,7 +67,9 @@ public class PPda{
         Iterator i = iterator();
         while (i.hasNext()){
             String s = (String) i.next();
-            PAction.go(s,player);
+            if (!s.trim().isEmpty()){
+                PAction.go(s,player);
+            }
         }
     }
     /**

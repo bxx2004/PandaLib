@@ -24,7 +24,7 @@ public class PTxt implements CustomFile{
         try {
             this.fileWriter = new FileWriter(this.file, true);
             this.writer = new PrintWriter(this.fileWriter, true);
-            this.reader = new BufferedReader(new FileReader(this.file));
+            this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
         }

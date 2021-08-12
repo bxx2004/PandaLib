@@ -7,4 +7,4 @@ softdepend:
   - Vault
 commands:
   PandaLib:
-    description: PandaLib指令
+    description: PandaLib指令.

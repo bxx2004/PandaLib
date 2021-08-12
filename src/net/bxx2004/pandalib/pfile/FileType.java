@@ -19,5 +19,9 @@ public enum FileType {
     /**
      * 代表一个文件夹
      */
-    DIR
+    DIR,
+    /**
+     * 代表一个pda脚本
+     */
+    PDA
 }

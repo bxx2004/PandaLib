@@ -15,7 +15,7 @@ public class PTxt implements CustomFile{
     public FileType getType() {
         return FileType.TXT;
     }
-
+    public PTxt(){};
     /**
      * @param url 文件地址
      */

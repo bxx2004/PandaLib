@@ -10,10 +10,10 @@ import java.util.HashMap;
  * 执行特殊的动作
  * @since 1.5.3
  */
-public abstract class PAnalysis{
-    private static HashMap<String,PAnalysisObject> map = new HashMap<String, PAnalysisObject>();
-    public PAnalysis(String key){
-        map.put(key, new PAnalysisObject() {
+public abstract class PAction{
+    private static HashMap<String,PActionObject> map = new HashMap<String, PActionObject>();
+    public PAction(String key){
+        map.put(key, new PActionObject() {
             @Override
             void vaule(Player player1,String... args) {
                 run(player1, args);
@@ -39,13 +39,22 @@ public abstract class PAnalysis{
             }
         }
         if (!map.keySet().contains(words)){
-            Lang.print("&c[&fPAnalysis&c] &c执行失败,该动作 &f" + words +" &c无效...");
+            Lang.print("&c[&fPAaction&c] &c执行失败,该动作 &f" + words +" &c无效...");
         }else {
             map.get(words).vaule(player,args1);
         }
     }
+
     /**
-     * 执行特殊的动作
+     * 该语句是否存在
+     * @param word 语句
+     * @return 是否存在
+     */
+    public static boolean has(String word){
+        return map.keySet().contains(word);
+    }
+    /**
+     * 执行特殊的动作(已过时)
      * @param player 玩家
      * @param text 文本
      */
@@ -82,6 +91,6 @@ public abstract class PAnalysis{
         }
     }
 }
-abstract class PAnalysisObject{
+abstract class PActionObject{
     abstract void vaule(Player player,String... args);
 }

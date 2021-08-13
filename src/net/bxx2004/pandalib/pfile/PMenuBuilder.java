@@ -84,14 +84,14 @@ public class PMenuBuilder {
      */
     public CustomItem getButton(String key){
         StringBuffer buffer = new StringBuffer();
-        buffer.append("DisPlayName: " + data.getString("Button." + key + ".DisPlayName") + "\n");
+        buffer.append("DisPlayName: " + data.getString("Button." + key + ".DisPlayName").replaceAll("&", "§") + "\n");
         buffer.append("Material: " + data.getString("Button." + key + ".Material") + "\n");
         buffer.append("Amount: " + data.getInt("Button." + key + ".Amount"));
         if ((data.getList("Button." + key + ".Lore") != null) && (!data.getList("Button." + key + ".Lore").isEmpty())){
             buffer.append("\nLore: ");
             List<String> lore = data.getList("Button." + key + ".Lore");
             for (String a : lore){
-                buffer.append("\n  - \"" + a + "\"");
+                buffer.append("\n  - \"" + a.replaceAll("&", "§") + "\"");
             }
         }
         if ((data.getList("Button." + key + ".Enchant") != null) && (!data.getList("Button." + key + ".Enchant").isEmpty())){

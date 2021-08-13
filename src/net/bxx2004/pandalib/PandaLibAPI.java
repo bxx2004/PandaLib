@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.*;
+import java.util.Iterator;
 
 /**
  * PandaLibAPI 一些工具
@@ -74,22 +75,29 @@ public class PandaLibAPI {
      * @param outPath 释放路径
      */
     public void saveFileFormPlugin(Plugin plugin,String filePath,String outPath){
-        InputStreamReader input = new InputStreamReader(plugin.getResource(filePath));
-        File file = new File(outPath);
-        if (!file.exists()){
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(new PrintStream(outPath));
-            while (input.read() != -1){
-                writer.write(input.read());
+            InputStreamReader input = new InputStreamReader(plugin.getResource(filePath),"UTF-8");
+            File file = new File(outPath);
+            FileWriter fileWriter = new FileWriter(file, true);
+            PrintWriter writer = new PrintWriter(fileWriter, true);
+            BufferedReader reder = new BufferedReader(input);
+
+            if (!file.exists()){
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Iterator<String> i = reder.lines().iterator();
+            while (i.hasNext()){
+                writer.println(i.next());
             }
             input.close();
-            writer.close();
+            fileWriter.close();
+            writer.close();;
+            reder.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

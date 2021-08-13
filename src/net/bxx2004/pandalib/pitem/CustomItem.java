@@ -199,11 +199,11 @@ public class CustomItem extends ItemStack {
         BufferedReader reader = new BufferedReader(new StringReader(s));
         FileConfiguration data = YamlConfiguration.loadConfiguration(reader);
 
-        CustomItem item = new CustomItem(Material.getMaterial(data.getString("Material")),data.getInt("Amount"),data.getString("DisPlayName"));
+        CustomItem item = new CustomItem(Material.getMaterial(data.getString("Material")),data.getInt("Amount"),data.getString("DisPlayName").replaceAll("&", "§"));
         if ((data.getStringList("Lore") != null) && (!data.getStringList("Lore").isEmpty())){
             List<String> lore = data.getStringList("Lore");
             for (String a : lore){
-                item.addLore(a);
+                item.addLore(a.replaceAll("&", "§"));
             }
         }
         if ((data.getStringList("Enchant") != null) && (!data.getStringList("Enchant").isEmpty())){

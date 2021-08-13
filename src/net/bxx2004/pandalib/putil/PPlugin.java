@@ -199,6 +199,14 @@ public class PPlugin {
     }
 
     /**
+     * 是否存在插件
+     * @param name 插件名
+     * @return 0
+     */
+    public static boolean exist(String name){
+        return Bukkit.getPluginManager().getPlugin(name) != null;
+    }
+    /**
      * 从某个目录下加载所有插件
      * @param dir 插件目录
      */

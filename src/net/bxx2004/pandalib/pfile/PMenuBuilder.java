@@ -1,5 +1,6 @@
 package net.bxx2004.pandalib.pfile;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.bxx2004.pandalib.pgui.CustomGui;
 import net.bxx2004.pandalib.pitem.CustomItem;
 import net.bxx2004.pandalib.planguage.PAction;
@@ -12,6 +13,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -147,7 +152,20 @@ public class PMenuBuilder {
      * 给玩家打开gui
      * @param player 玩家
      */
-    public void open(Player player){
+    public void open(Player player,boolean plcaeholderapi){
+        if (plcaeholderapi){
+            ItemStack[] stack = this.gui.getInventory().getContents();
+            for (ItemStack stack1 : stack){
+                ItemMeta meta = stack1.getItemMeta();
+                meta.setDisplayName(PlaceholderAPI.setPlaceholders(player,stack1.getItemMeta().getDisplayName()));
+                List<String> lore = new ArrayList<>();
+                for (String list : meta.getLore()){
+                    lore.add(PlaceholderAPI.setPlaceholders(player,list));
+                }
+                meta.setLore(lore);
+                stack1.setItemMeta(meta);
+            }
+        }
         this.gui.openGui(player);
     }
 

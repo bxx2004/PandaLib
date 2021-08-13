@@ -156,19 +156,23 @@ public class PMenuBuilder {
         if (plcaeholderapi){
             ItemStack[] stack = this.gui.getInventory().getContents();
             for (ItemStack stack1 : stack){
-                if (stack1.hasItemMeta()){
-                    ItemMeta meta = stack1.getItemMeta();
-                    if (meta.hasDisplayName()){
-                        meta.setDisplayName(PlaceholderAPI.setPlaceholders(player,stack1.getItemMeta().getDisplayName()));
-                    }
-                    if (meta.hasLore()){
-                        List<String> lore = new ArrayList<>();
-                        for (String list : meta.getLore()){
-                            lore.add(PlaceholderAPI.setPlaceholders(player,list));
+                if (stack1 == null){
+
+                }else {
+                    if (stack1.hasItemMeta()){
+                        ItemMeta meta = stack1.getItemMeta();
+                        if (meta.hasDisplayName()){
+                            meta.setDisplayName(PlaceholderAPI.setPlaceholders(player,stack1.getItemMeta().getDisplayName()));
                         }
-                        meta.setLore(lore);
+                        if (meta.hasLore()){
+                            List<String> lore = new ArrayList<>();
+                            for (String list : meta.getLore()){
+                                lore.add(PlaceholderAPI.setPlaceholders(player,list));
+                            }
+                            meta.setLore(lore);
+                        }
+                        stack1.setItemMeta(meta);
                     }
-                    stack1.setItemMeta(meta);
                 }
             }
         }

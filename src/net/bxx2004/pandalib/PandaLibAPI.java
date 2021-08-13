@@ -78,8 +78,7 @@ public class PandaLibAPI {
         try {
             InputStreamReader input = new InputStreamReader(plugin.getResource(filePath),"UTF-8");
             File file = new File(outPath);
-            FileWriter fileWriter = new FileWriter(file, true);
-            PrintWriter writer = new PrintWriter(fileWriter, true);
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"), true);
             BufferedReader reder = new BufferedReader(input);
 
             if (!file.exists()){
@@ -95,7 +94,6 @@ public class PandaLibAPI {
                 writer.println(i.next());
             }
             input.close();
-            fileWriter.close();
             writer.close();;
             reder.close();
         } catch (Exception e) {

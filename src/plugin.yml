@@ -1,6 +1,6 @@
 name: PandaLib
 main: net.bxx2004.pandalib.PandaLib
-version: 2.0.3
+version: 2.0.4
 author: bxx2004
 api-version: 1.13
 softdepend:

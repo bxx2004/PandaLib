@@ -74,7 +74,11 @@ public abstract class PAction{
                     try {
                         next = Integer.parseInt(word.split(" ")[1]);
                     }catch (Exception e){
-                        next = (int) go(word.substring(5,word.indexOf("]")),player);
+                        try {
+                            next = (int) go(word.substring(5,word.indexOf("]")),player);
+                        }catch (Exception ea){
+                            next = Integer.parseInt((String) go(word.substring(5,word.indexOf("]")),player));
+                        }
                     }
                     String lang = word.substring(word.indexOf("[",word.indexOf("]")) + 1,word.indexOf("]",word.indexOf("[",word.indexOf("]"))));
                     String[] lang1 = lang.split(",");
@@ -84,6 +88,7 @@ public abstract class PAction{
                         }
                     }
                 }catch (Exception e){
+                    e.printStackTrace();
                     Lang.error("&4FOR循环异常",word);
                 }
                 return null;

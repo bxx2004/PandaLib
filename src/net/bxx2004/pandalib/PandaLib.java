@@ -338,9 +338,49 @@ public class PandaLib extends JavaPlugin{
                     String name = args[0];
                     String type = args[1];
                     if (type.equalsIgnoreCase("p")){
-                        return pscriptdata.get(name);
+                        try {
+                            long a = (long) pscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        try {
+                            int a = (int) pscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        try {
+                            double a = (double) pscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        try {
+                            float a = (float) pscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        try {
+                            String a = (String) pscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        return tscriptdata.get(name);
                     }
                     if (type.equalsIgnoreCase("t")){
+                        try {
+                            int a = (int) tscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        try {
+                            long a = (long) tscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        try {
+                            double a = (double) tscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        try {
+                            float a = (float) tscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
+                        try {
+                            String a = (String) tscriptdata.get(name);
+                            return a;
+                        }catch (Exception e){}
                         return tscriptdata.get(name);
                     }
                 }catch (Exception e){
@@ -400,6 +440,12 @@ public class PandaLib extends JavaPlugin{
                             tscriptdata.put(varname,value);
                         }
                     }catch (Exception e){}
+                    if (type.equalsIgnoreCase("p")){
+                        pscriptdata.set(varname,args[1]);
+                    }
+                    if (type.equalsIgnoreCase("t")){
+                        tscriptdata.put(varname,args[1]);
+                    }
                 }catch (Exception e){
                     Lang.error("&4VAR存入变量异常",args);
                 }

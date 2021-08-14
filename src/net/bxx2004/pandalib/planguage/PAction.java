@@ -70,8 +70,13 @@ public abstract class PAction{
                 return null;
             }else if (words.equalsIgnoreCase("for")){
                 try {
-                    int next = Integer.parseInt(word.split(" ")[1]);
-                    String lang = word.substring(word.indexOf("[") + 1,word.indexOf("]"));
+                    int next = 0;
+                    try {
+                        next = Integer.parseInt(word.split(" ")[1]);
+                    }catch (Exception e){
+                        next = (int) go(word.substring(5,word.indexOf("]")),player);
+                    }
+                    String lang = word.substring(word.indexOf("[",word.indexOf("]")) + 1,word.indexOf("]",word.indexOf("[",word.indexOf("]"))));
                     String[] lang1 = lang.split(",");
                     for (int i = 0; i< next; i++){
                         for (String s : lang1){

@@ -10,6 +10,7 @@ import net.bxx2004.pandalib.manager.DataManager;
 import net.bxx2004.pandalib.manager.Lang;
 import net.bxx2004.pandalib.otherplugin.PVault;
 import net.bxx2004.pandalib.pcommands.PSimpleCommand;
+import net.bxx2004.pandalib.pfile.PYml;
 import net.bxx2004.pandalib.pitem.CustomItem;
 import net.bxx2004.pandalib.pitem.PEnchantment;
 import net.bxx2004.pandalib.planguage.PAction;
@@ -49,6 +50,8 @@ public class PandaLib extends JavaPlugin{
     static {
         DataManager.setJar();
     }
+    public static PYml pscriptdata = new PYml("plugins/PandaLib/scriptdata.yml",true);
+    public static HashMap<String,Object> tscriptdata = new HashMap<String, Object>();
     public static PandaLib getInstance(){
         return PandaLib.getPlugin(PandaLib.class);
     }
@@ -318,6 +321,88 @@ public class PandaLib extends JavaPlugin{
             @Override
             public Object run(Player player, String... args) {
                 player.closeInventory();
+                return null;
+            }
+        };
+        new PAction("print"){
+            @Override
+            public Object run(Player player, String... args) {
+                Bukkit.getConsoleSender().sendMessage(args[0].replaceAll("&", "§"));
+                return null;
+            }
+        };
+        new PAction("value"){
+            @Override
+            public Object run(Player player, String... args) {
+                try {
+                    String name = args[0];
+                    String type = args[1];
+                    if (type.equalsIgnoreCase("p")){
+                        return pscriptdata.get(name);
+                    }
+                    if (type.equalsIgnoreCase("t")){
+                        return tscriptdata.get(name);
+                    }
+                }catch (Exception e){
+                    Lang.error("&4VALUE取出变量异常",args);
+                }
+                return null;
+            }
+        };
+        new PAction("var"){
+            @Override
+            public Object run(Player player, String... args) {
+                try {
+                    String varname = args[0];
+                    String type = args[2];
+                    try {
+                        boolean value = Boolean.parseBoolean(args[1]);
+                        if (type.equalsIgnoreCase("p")){
+                            pscriptdata.set(varname,value);
+                        }
+                        if (type.equalsIgnoreCase("t")){
+                            tscriptdata.put(varname,value);
+                        }
+                    }catch (Exception e){}
+                    try {
+                        int value = Integer.parseInt(args[1]);
+                        if (type.equalsIgnoreCase("p")){
+                            pscriptdata.set(varname,value);
+                        }
+                        if (type.equalsIgnoreCase("t")){
+                            tscriptdata.put(varname,value);
+                        }
+                    }catch (Exception e){}
+                    try {
+                        float value = Float.parseFloat(args[1]);
+                        if (type.equalsIgnoreCase("p")){
+                            pscriptdata.set(varname,value);
+                        }
+                        if (type.equalsIgnoreCase("t")){
+                            tscriptdata.put(varname,value);
+                        }
+                    }catch (Exception e){}
+                    try {
+                        double value = Double.parseDouble(args[1]);
+                        if (type.equalsIgnoreCase("p")){
+                            pscriptdata.set(varname,value);
+                        }
+                        if (type.equalsIgnoreCase("t")){
+                            tscriptdata.put(varname,value);
+                        }
+                    }catch (Exception e){}
+                    try {
+                        long value = Long.parseLong(args[1]);
+                        if (type.equalsIgnoreCase("p")){
+                            pscriptdata.set(varname,value);
+                        }
+                        if (type.equalsIgnoreCase("t")){
+                            tscriptdata.put(varname,value);
+                        }
+                    }catch (Exception e){}
+                }catch (Exception e){
+                    Lang.error("&4VAR存入变量异常",args);
+                }
                 return null;
             }
         };

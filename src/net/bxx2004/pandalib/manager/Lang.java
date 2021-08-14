@@ -13,6 +13,13 @@ public class Lang {
         Bukkit.getConsoleSender().sendMessage("§b[§f PandaLib §b] §f- §7" + message.replaceAll("&", "§"));
     }
 
+    public static void error(String type,String... message){
+        Bukkit.getConsoleSender().sendMessage("§b[§c PandaLib §b] §f- §cError: " + type.replaceAll("&", "§"));
+        for (String s : message){
+            Bukkit.getConsoleSender().sendMessage("§b[§c PandaLib §b] §f- §c" + s.replaceAll("&", "§"));
+        }
+    }
+
     /**
      * 构造一个消息对象
      * @param plugin 前缀

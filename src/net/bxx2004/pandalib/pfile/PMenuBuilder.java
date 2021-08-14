@@ -1,6 +1,7 @@
 package net.bxx2004.pandalib.pfile;
 
-import me.clip.placeholderapi.PlaceholderAPI;
+import net.bxx2004.java.reflect.PJMethod;
+import net.bxx2004.java.reflect.ReflectUtils;
 import net.bxx2004.pandalib.pgui.CustomGui;
 import net.bxx2004.pandalib.pitem.CustomItem;
 import net.bxx2004.pandalib.planguage.PAction;
@@ -162,12 +163,16 @@ public class PMenuBuilder {
                     if (stack1.hasItemMeta()){
                         ItemMeta meta = stack1.getItemMeta();
                         if (meta.hasDisplayName()){
-                            meta.setDisplayName(PlaceholderAPI.setPlaceholders(player,stack1.getItemMeta().getDisplayName()));
+                            PJMethod method = new PJMethod(ReflectUtils.getClass("me.clip.placeholderapi.PlaceholderAPI"));
+                            String name = (String) method.InPutName("setPlaceholders").InPutArg(player,stack1.getItemMeta().getDisplayName()).run(null);
+                            meta.setDisplayName(name);
                         }
                         if (meta.hasLore()){
                             List<String> lore = new ArrayList<>();
                             for (String list : meta.getLore()){
-                                lore.add(PlaceholderAPI.setPlaceholders(player,list));
+                                PJMethod method = new PJMethod(ReflectUtils.getClass("me.clip.placeholderapi.PlaceholderAPI"));
+                                String lo = (String) method.InPutName("setPlaceholders").InPutArg(list).run(null);
+                                lore.add(lo);
                             }
                             meta.setLore(lore);
                         }

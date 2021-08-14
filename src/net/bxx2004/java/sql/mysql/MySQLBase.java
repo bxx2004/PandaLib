@@ -37,7 +37,6 @@ public class MySQLBase implements SQLBase{
         namesql = namesql.substring(0,namesql.length() -2);
         valueSize = valueSize.substring(0,valueSize.length() -1);
         String sql = "insert into " + tableName + "(" + namesql + ") values("+ valueSize +")";
-        System.out.println(sql);
         run(sql);
     }
 

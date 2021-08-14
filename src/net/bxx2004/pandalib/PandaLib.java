@@ -71,7 +71,7 @@ public class PandaLib extends JavaPlugin{
             Lang.print("&e┖━━━━━━━━━━ PandaLib ━━━━━━━━━━━━━━━━━━━━━━━┛");
         }
         if (DataManager.getConfig().getBoolean("LIBUPDATE.UPDATEMESSAGE")){
-            if (getLastVestion() != null){
+            if (getLastVestion().isEmpty()){
                 if (getLastVestion().get(0).equals(getDescription().getVersion())){
                     System.out.println("PandaLib 当前无更新...");
                 }else {
@@ -84,10 +84,10 @@ public class PandaLib extends JavaPlugin{
                             }
                             System.out.println("正在为您下载最新版本的PandaLib到目录...");
                             if (getConfig().getString("LIBUPDATE.DOWNLOADPATH").contains("!")){
-                                PDownLoad load = new PDownLoad("http://linyanmc.cn/PandaLib/PandaLib.jar", getConfig().getString("LIBUPDATE.DOWNLOADUPATH").replaceAll("!","") + "/PandaLib-"+getLastVestion()+".jar", this);
+                                PDownLoad load = new PDownLoad("http://linyanmc.cn/PandaLib/PandaLib.jar", getConfig().getString("LIBUPDATE.DOWNLOADPATH").replaceAll("!","") + "/PandaLib-"+getLastVestion()+".jar", this);
                                 load.start();
                             }else {
-                                PDownLoad load = new PDownLoad("http://linyanmc.cn/PandaLib/PandaLib.jar", getDataFolder().getAbsolutePath() + "/" +getConfig().getString("LIBUPDATE.DOWNLOADUPATH") + "/PandaLib-"+getLastVestion().get(0).replaceAll("/", "")+".jar", this);
+                                PDownLoad load = new PDownLoad("http://linyanmc.cn/PandaLib/PandaLib.jar", getDataFolder().getAbsolutePath() + "/" +getConfig().getString("LIBUPDATE.DOWNLOADPATH") + "/PandaLib-"+getLastVestion().get(0).replaceAll("/", "")+".jar", this);
                                 load.start();
                             }
                         }
@@ -291,35 +291,39 @@ public class PandaLib extends JavaPlugin{
     private void registerAction(){
         new PAction("tell"){
             @Override
-            public void run(Player player, String... args) {
+            public Object run(Player player, String... args) {
                 PMessage.to(player,args[0]);
+                return null;
             }
         };
         new PAction("title"){
             @Override
-            public void run(Player player, String... args) {
+            public Object run(Player player, String... args) {
                 if (args.length > 1){
                     PTitle.To(player,args[0] + "&nbsp" + args[1]);
                 }else {
                     PTitle.To(player,args[0]);
                 }
+                return null;
             }
         };
         new PAction("actionbar"){
             @Override
-            public void run(Player player, String... args) {
+            public Object run(Player player, String... args) {
                 PActionBar.To(player,args[0]);
+                return null;
             }
         };
         new PAction("close"){
             @Override
-            public void run(Player player, String... args) {
+            public Object run(Player player, String... args) {
                 player.closeInventory();
+                return null;
             }
         };
         new PAction("command"){
             @Override
-            public void run(Player player, String... args) {
+            public Object run(Player player, String... args) {
                 String way = args[0];
                 String command = "";
                 for (int a = 1; a< args.length ; a++){
@@ -340,6 +344,7 @@ public class PandaLib extends JavaPlugin{
                 if (way.equalsIgnoreCase("console")){
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(),command.replaceAll("<PLAYER>",player.getName()));
                 }
+                return null;
             }
         };
     }
@@ -351,25 +356,29 @@ public class PandaLib extends JavaPlugin{
                     sender.sendMessage("[PandaLib] - 请输入参数...");
                     return;
                 }
-                if (args[0].equalsIgnoreCase("action")){
-                    PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.planguage.PAction"));
-                    HashMap map = (HashMap) var.getValue("map");
-                    sender.sendMessage("- PandaLib | 动作");
-                    for (Object s : map.keySet()){
-                        sender.sendMessage(" - " + s);
+                if (sender.hasPermission("pandalib.admin")){
+                    if (args[0].equalsIgnoreCase("action")){
+                        PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.planguage.PAction"));
+                        HashMap map = (HashMap) var.getValue("map");
+                        sender.sendMessage("- PandaLib | 动作");
+                        for (Object s : map.keySet()){
+                            sender.sendMessage(" - " + s);
+                        }
                     }
-                }
-                if (args[0].equalsIgnoreCase("enchants")){
-                    PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.pitem.PEnchantment"));
-                    List<PEnchantment> enchantments = (List<PEnchantment>) var.getValue("enchantments");
-                    sender.sendMessage("- PandaLib | 附魔");
-                    for (PEnchantment s : enchantments){
-                        sender.sendMessage(s.getPluginName() + " - " + s.getEnchantName());
+                    if (args[0].equalsIgnoreCase("enchants")){
+                        PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.pitem.PEnchantment"));
+                        List<PEnchantment> enchantments = (List<PEnchantment>) var.getValue("enchantments");
+                        sender.sendMessage("- PandaLib | 附魔");
+                        for (PEnchantment s : enchantments){
+                            sender.sendMessage(s.getPluginName() + " - " + s.getEnchantName());
+                        }
                     }
-                }
-                if (args[0].equalsIgnoreCase("gc")){
-                    sender.sendMessage("成功启动Java内存回收...");
-                    System.gc();
+                    if (args[0].equalsIgnoreCase("gc")){
+                        sender.sendMessage("Java内存回收...");
+                        System.gc();
+                    }
+                }else {
+                    sender.sendMessage("你没权限");
                 }
             }
         };

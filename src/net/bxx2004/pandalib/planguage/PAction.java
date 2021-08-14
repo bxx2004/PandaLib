@@ -101,23 +101,25 @@ public abstract class PAction{
                     );
                     if (sign.equals("=")){
                         try {
-                            int o1 = (int) go(checklang1,player);
-                            int o2 = (int) go(checklang2,player);
+                            int o1 =  Integer.parseInt(go(checklang1,player).toString());
+                            int o2 =  Integer.parseInt(go(checklang2,player).toString());
+                            return o1 == o2;
+                        }catch (Exception e){ }
+                        try {
+                            long o1 = Long.parseLong(go(checklang1,player).toString());
+                            long o2 = Long.parseLong(go(checklang2,player).toString());
+                            return o1 == o2;
+                        }catch (Exception e){
+
+                        }
+                        try {
+                            float o1 = Float.parseFloat(go(checklang1,player).toString());
+                            float o2 = Float.parseFloat(go(checklang2,player).toString());
                             return o1 == o2;
                         }catch (Exception e){}
                         try {
-                            long o1 = (long) go(checklang1,player);
-                            long o2 = (long) go(checklang2,player);
-                            return o1 == o2;
-                        }catch (Exception e){}
-                        try {
-                            float o1 = (float) go(checklang1,player);
-                            float o2 = (float) go(checklang2,player);
-                            return o1 == o2;
-                        }catch (Exception e){}
-                        try {
-                            double o1 = (double) go(checklang1,player);
-                            double o2 = (double) go(checklang2,player);
+                            double o1 = Double.parseDouble(go(checklang1,player).toString());
+                            double o2 = Double.parseDouble(go(checklang2,player).toString());
                             return o1 == o2;
                         }catch (Exception e){}
                         try {
@@ -128,89 +130,97 @@ public abstract class PAction{
                     }
                     if (sign.equals(">")){
                         try {
-                            int o1 = (int) go(checklang1,player);
-                            int o2 = (int) go(checklang2,player);
+                            int o1 =  Integer.parseInt(go(checklang1,player).toString());
+                            int o2 =  Integer.parseInt(go(checklang2,player).toString());
+                            return o1 > o2;
+                        }catch (Exception e){ }
+                        try {
+                            long o1 = Long.parseLong(go(checklang1,player).toString());
+                            long o2 = Long.parseLong(go(checklang2,player).toString());
+                            return o1 > o2;
+                        }catch (Exception e){
+
+                        }
+                        try {
+                            float o1 = Float.parseFloat(go(checklang1,player).toString());
+                            float o2 = Float.parseFloat(go(checklang2,player).toString());
                             return o1 > o2;
                         }catch (Exception e){}
                         try {
-                            long o1 = (long) go(checklang1,player);
-                            long o2 = (long) go(checklang2,player);
-                            return o1 > o2;
-                        }catch (Exception e){}
-                        try {
-                            float o1 = (float) go(checklang1,player);
-                            float o2 = (float) go(checklang2,player);
-                            return o1 > o2;
-                        }catch (Exception e){}
-                        try {
-                            double o1 = (double) go(checklang1,player);
-                            double o2 = (double) go(checklang2,player);
+                            double o1 = Double.parseDouble(go(checklang1,player).toString());
+                            double o2 = Double.parseDouble(go(checklang2,player).toString());
                             return o1 > o2;
                         }catch (Exception e){}
                     }
                     if (sign.equals(">=")){
                         try {
-                            int o1 = (int) go(checklang1,player);
-                            int o2 = (int) go(checklang2,player);
+                            int o1 =  Integer.parseInt(go(checklang1,player).toString());
+                            int o2 =  Integer.parseInt(go(checklang2,player).toString());
+                            return o1 >= o2;
+                        }catch (Exception e){ }
+                        try {
+                            long o1 = Long.parseLong(go(checklang1,player).toString());
+                            long o2 = Long.parseLong(go(checklang2,player).toString());
+                            return o1 >= o2;
+                        }catch (Exception e){
+
+                        }
+                        try {
+                            float o1 = Float.parseFloat(go(checklang1,player).toString());
+                            float o2 = Float.parseFloat(go(checklang2,player).toString());
                             return o1 >= o2;
                         }catch (Exception e){}
                         try {
-                            long o1 = (long) go(checklang1,player);
-                            long o2 = (long) go(checklang2,player);
-                            return o1 >= o2;
-                        }catch (Exception e){}
-                        try {
-                            float o1 = (float) go(checklang1,player);
-                            float o2 = (float) go(checklang2,player);
-                            return o1 >= o2;
-                        }catch (Exception e){}
-                        try {
-                            double o1 = (double) go(checklang1,player);
-                            double o2 = (double) go(checklang2,player);
+                            double o1 = Double.parseDouble(go(checklang1,player).toString());
+                            double o2 = Double.parseDouble(go(checklang2,player).toString());
                             return o1 >= o2;
                         }catch (Exception e){}
                     }
                     if (sign.equals("<")){
                         try {
-                            int o1 = (int) go(checklang1,player);
-                            int o2 = (int) go(checklang2,player);
+                            int o1 =  Integer.parseInt(go(checklang1,player).toString());
+                            int o2 =  Integer.parseInt(go(checklang2,player).toString());
+                            return o1 < o2;
+                        }catch (Exception e){ }
+                        try {
+                            long o1 = Long.parseLong(go(checklang1,player).toString());
+                            long o2 = Long.parseLong(go(checklang2,player).toString());
+                            return o1 < o2;
+                        }catch (Exception e){
+
+                        }
+                        try {
+                            float o1 = Float.parseFloat(go(checklang1,player).toString());
+                            float o2 = Float.parseFloat(go(checklang2,player).toString());
                             return o1 < o2;
                         }catch (Exception e){}
                         try {
-                            long o1 = (long) go(checklang1,player);
-                            long o2 = (long) go(checklang2,player);
-                            return o1 < o2;
-                        }catch (Exception e){}
-                        try {
-                            float o1 = (float) go(checklang1,player);
-                            float o2 = (float) go(checklang2,player);
-                            return o1 < o2;
-                        }catch (Exception e){}
-                        try {
-                            double o1 = (double) go(checklang1,player);
-                            double o2 = (double) go(checklang2,player);
+                            double o1 = Double.parseDouble(go(checklang1,player).toString());
+                            double o2 = Double.parseDouble(go(checklang2,player).toString());
                             return o1 < o2;
                         }catch (Exception e){}
                     }
                     if (sign.equals("<=")){
                         try {
-                            int o1 = (int) go(checklang1,player);
-                            int o2 = (int) go(checklang2,player);
+                            int o1 =  Integer.parseInt(go(checklang1,player).toString());
+                            int o2 =  Integer.parseInt(go(checklang2,player).toString());
+                            return o1 <= o2;
+                        }catch (Exception e){ }
+                        try {
+                            long o1 = Long.parseLong(go(checklang1,player).toString());
+                            long o2 = Long.parseLong(go(checklang2,player).toString());
+                            return o1 <= o2;
+                        }catch (Exception e){
+
+                        }
+                        try {
+                            float o1 = Float.parseFloat(go(checklang1,player).toString());
+                            float o2 = Float.parseFloat(go(checklang2,player).toString());
                             return o1 <= o2;
                         }catch (Exception e){}
                         try {
-                            long o1 = (long) go(checklang1,player);
-                            long o2 = (long) go(checklang2,player);
-                            return o1 <= o2;
-                        }catch (Exception e){}
-                        try {
-                            float o1 = (float) go(checklang1,player);
-                            float o2 = (float) go(checklang2,player);
-                            return o1 <= o2;
-                        }catch (Exception e){}
-                        try {
-                            double o1 = (double) go(checklang1,player);
-                            double o2 = (double) go(checklang2,player);
+                            double o1 = Double.parseDouble(go(checklang1,player).toString());
+                            double o2 = Double.parseDouble(go(checklang2,player).toString());
                             return o1 <= o2;
                         }catch (Exception e){}
                     }

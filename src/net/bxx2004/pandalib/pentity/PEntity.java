@@ -19,6 +19,7 @@ public class PEntity {
     private LivingEntity entity;
     private PEntityMeta meta;
     private Location location;
+    private EntityType type;
     /**
      * 构造一个简单的实体
      * @param location 位置
@@ -67,6 +68,22 @@ public class PEntity {
         this.meta = meta;
         this.location = new Location(Bukkit.getWorld(world), x,y,z);
         this.entity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
+    }
+
+    /**
+     * 构造一个简单的实体
+     * @param type 实体类型
+     */
+    public PEntity(EntityType type){
+        this.type = type;
+    }
+
+    /**
+     * 生成实体
+     * @param location 位置
+     */
+    public void spawn(Location location){
+        this.entity = (LivingEntity) location.getWorld().spawnEntity(location,type);
     }
 
     /**

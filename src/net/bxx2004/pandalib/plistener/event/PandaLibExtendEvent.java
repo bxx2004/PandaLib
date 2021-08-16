@@ -28,20 +28,12 @@ public abstract class PandaLibExtendEvent extends Event implements Cancellable {
         return handlers;
     }
     /**
-     * 实现拓展事件
-     * @return 触发监听器
-     */
-    public abstract PListener realize();
-    /**
      * 通信一个事件
      */
     public static void callPandaLibEvent(PandaLibExtendEvent event){
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
-    /**
-     * 注册一个事件
-     */
-    public static void register(PandaLibExtendEvent event){
-        event.realize();
+    public static HandlerList getHandlerList(){
+        return handlers;
     }
 }

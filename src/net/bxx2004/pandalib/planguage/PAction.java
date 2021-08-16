@@ -225,6 +225,7 @@ public abstract class PAction{
                         }catch (Exception e){}
                     }
                 }catch (Exception e){
+                    e.printStackTrace();
                     Lang.error("&4CHECK检查异常",word);
                 }
                 return null;

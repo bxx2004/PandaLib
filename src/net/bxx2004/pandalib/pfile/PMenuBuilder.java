@@ -1,5 +1,6 @@
 package net.bxx2004.pandalib.pfile;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.bxx2004.java.reflect.PJMethod;
 import net.bxx2004.java.reflect.ReflectUtils;
 import net.bxx2004.pandalib.pgui.CustomGui;
@@ -102,7 +103,6 @@ public class PMenuBuilder {
         }
         if ((data.getList("Button." + key + ".Enchant") != null) && (!data.getList("Button." + key + ".Enchant").isEmpty())){
             buffer.append("\nEnchant: ");
-            HashMap<Enchantment,Integer> enchant = new HashMap<Enchantment, Integer>();
             for (Object e : data.getList("Button." + key + ".Enchant")){
                 buffer.append("\n  - \"" + (String) e + "\"");
             }
@@ -163,16 +163,12 @@ public class PMenuBuilder {
                     if (stack1.hasItemMeta()){
                         ItemMeta meta = stack1.getItemMeta();
                         if (meta.hasDisplayName()){
-                            PJMethod method = new PJMethod(ReflectUtils.getClass("me.clip.placeholderapi.PlaceholderAPI"));
-                            String name = (String) method.InPutName("setPlaceholders").InPutArg(player,stack1.getItemMeta().getDisplayName()).run(null);
-                            meta.setDisplayName(name);
+                            meta.setDisplayName(PlaceholderAPI.setPlaceholders(player,meta.getDisplayName()));
                         }
                         if (meta.hasLore()){
                             List<String> lore = new ArrayList<>();
                             for (String list : meta.getLore()){
-                                PJMethod method = new PJMethod(ReflectUtils.getClass("me.clip.placeholderapi.PlaceholderAPI"));
-                                String lo = (String) method.InPutName("setPlaceholders").InPutArg(list).run(null);
-                                lore.add(lo);
+                                lore.add(PlaceholderAPI.setPlaceholders(player,list));
                             }
                             meta.setLore(lore);
                         }

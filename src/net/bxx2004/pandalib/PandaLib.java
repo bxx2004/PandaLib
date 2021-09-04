@@ -50,8 +50,6 @@ public class PandaLib extends JavaPlugin{
     static {
         DataManager.setJar();
     }
-    public static PYml pscriptdata = new PYml("plugins/PandaLib/scriptdata.yml",true);
-    public static HashMap<String,Object> tscriptdata = new HashMap<String, Object>();
     public static PandaLib getInstance(){
         return PandaLib.getPlugin(PandaLib.class);
     }
@@ -328,64 +326,6 @@ public class PandaLib extends JavaPlugin{
             @Override
             public Object run(Player player, String... args) {
                 Bukkit.getConsoleSender().sendMessage(args[0].replaceAll("&", "§"));
-                return null;
-            }
-        };
-        new PAction("value"){
-            @Override
-            public Object run(Player player, String... args) {
-                try {
-                    String name = args[0];
-                    String type = args[1];
-                    if (type.equalsIgnoreCase("p")){
-                        try {
-                            long a = (long) pscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        try {
-                            int a = (int) pscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        try {
-                            double a = (double) pscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        try {
-                            float a = (float) pscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        try {
-                            String a = (String) pscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        return tscriptdata.get(name);
-                    }
-                    if (type.equalsIgnoreCase("t")){
-                        try {
-                            int a = (int) tscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        try {
-                            long a = (long) tscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        try {
-                            double a = (double) tscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        try {
-                            float a = (float) tscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        try {
-                            String a = (String) tscriptdata.get(name);
-                            return a;
-                        }catch (Exception e){}
-                        return tscriptdata.get(name);
-                    }
-                }catch (Exception e){
-                    Lang.error("&4VALUE取出变量异常",args);
-                }
                 return null;
             }
         };

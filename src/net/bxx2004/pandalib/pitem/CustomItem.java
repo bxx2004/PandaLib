@@ -13,6 +13,9 @@ import java.io.StringReader;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * 构造一个自定义物品堆
+ */
 public class CustomItem extends ItemStack {
     /**
      * 无用

@@ -4,7 +4,9 @@ import net.bxx2004.pandalib.manager.Lang;
 import net.bxx2004.pandalib.planguage.PAction;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class PPda{
     private PTxt txt;
@@ -63,13 +65,12 @@ public class PPda{
      * 执行该文件所有动作
      */
     public void run(Player player){
+        List<String> s = new ArrayList<String>();
         Iterator i = iterator();
         while (i.hasNext()){
-            String s = (String) i.next();
-            if (!s.trim().isEmpty()){
-                PAction.go(s,player);
-            }
+            s.add((String) i.next());
         }
+        PAction.go(s,player);
     }
     /**
      * 遍历所有动作

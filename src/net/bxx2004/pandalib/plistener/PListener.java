@@ -27,7 +27,6 @@ public class PListener implements Listener {
     /**
      * 挂在一个PListener监听器
      * @param pluginName 插件名称
-     * @return PListener
      */
     public void hook(String pluginName){
         if (!hook){

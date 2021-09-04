@@ -5,6 +5,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class Lang {
     private String prefix;
@@ -14,6 +15,12 @@ public class Lang {
     }
 
     public static void error(String type,String... message){
+        Bukkit.getConsoleSender().sendMessage("§b[§c PandaLib §b] §f- §cError: " + type.replaceAll("&", "§"));
+        for (String s : message){
+            Bukkit.getConsoleSender().sendMessage("§b[§c PandaLib §b] §f- §c" + s.replaceAll("&", "§"));
+        }
+    }
+    public static void error(String type, List<String> message){
         Bukkit.getConsoleSender().sendMessage("§b[§c PandaLib §b] §f- §cError: " + type.replaceAll("&", "§"));
         for (String s : message){
             Bukkit.getConsoleSender().sendMessage("§b[§c PandaLib §b] §f- §c" + s.replaceAll("&", "§"));

@@ -3,6 +3,8 @@
     <output-path>$PROJECT_DIR$/../../测试库/1.12.2/plugins</output-path>
     <root id="archive" name="PandaLib.jar">
       <element id="module-output" name="PandaLib" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/新建文件夹/reflections-0.10.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/新建文件夹/javassist.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

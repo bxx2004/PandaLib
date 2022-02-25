@@ -94,6 +94,9 @@ public class PJMethod {
     @Deprecated
     public Object runMethod(Object object, Object... args){
         try {
+            this.method.setAccessible(true);
+        }catch (Exception e){}
+        try {
             Object res = method.invoke(object,args);
             return res;
         } catch (IllegalAccessException e) {
@@ -115,6 +118,9 @@ public class PJMethod {
         this.methodName = methodName;
         this.classes = classes;
         this.method = ReflectUtils.getMethod(this.aClass,methodName,classes);
+        try {
+            this.method.setAccessible(true);
+        }catch (Exception e){}
         return this;
     }
     /**

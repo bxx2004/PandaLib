@@ -1,28 +1,22 @@
 package net.bxx2004.pandalib;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.bxx2004.Metrics;
-import net.bxx2004.java.reflect.PJVariable;
-import net.bxx2004.java.reflect.ReflectUtils;
-import net.bxx2004.pandalib.manager.DataManager;
-import net.bxx2004.pandalib.manager.Lang;
-import net.bxx2004.pandalib.otherplugin.PVault;
-import net.bxx2004.pandalib.pcommands.PSimpleCommand;
-import net.bxx2004.pandalib.pfile.PYml;
-import net.bxx2004.pandalib.pitem.CustomItem;
-import net.bxx2004.pandalib.pitem.PEnchantment;
-import net.bxx2004.pandalib.planguage.PAction;
-import net.bxx2004.pandalib.planguage.PActionBar;
-import net.bxx2004.pandalib.planguage.PMessage;
-import net.bxx2004.pandalib.planguage.PTitle;
-import net.bxx2004.pandalib.plistener.PListener;
-import net.bxx2004.pandalib.putil.PMath;
-import net.bxx2004.pandalib.putil.PDownLoad;
-import net.bxx2004.pandalib.putil.PPlugin;
+import net.bxx2004.pandalib.bukkit.manager.Lang;
+import net.bxx2004.pandalib.bukkit.otherplugin.PVault;
+import net.bxx2004.pandalib.bukkit.pfile.PYml;
+import net.bxx2004.pandalib.bukkit.pitem.CustomItem;
+import net.bxx2004.pandalib.bukkit.pitem.PEnchantment;
+import net.bxx2004.pandalib.bukkit.planguage.PAction;
+import net.bxx2004.pandalib.bukkit.planguage.PActionBar;
+import net.bxx2004.pandalib.bukkit.planguage.PMessage;
+import net.bxx2004.pandalib.bukkit.planguage.PTitle;
+import net.bxx2004.pandalib.bukkit.plistener.PListener;
+import net.bxx2004.pandalib.bukkit.putil.PMath;
+import net.bxx2004.pandalib.bukkit.putil.PPlugin;
+import net.bxx2004.pandalibloader.PandaLibPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.enchantment.EnchantItemEvent;
@@ -32,103 +26,87 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static net.bxx2004.pandalib.pitem.PEnchantment.enchantments;
-/**
- * 插件主类
- * @author bxx2004
- * @version 1.4.2
- */
-public class PandaLib extends JavaPlugin{
-    static {
-        DataManager.setJar();
-    }
-    public static PandaLib getInstance(){
-        return PandaLib.getPlugin(PandaLib.class);
-    }
-    @Override
-    public void onEnable() {
-        registerOther();
-        registerCommand();
-        registerAction();
-        Metrics metrics = new Metrics(this, 11609);
-        saveDefaultConfig();
-        if (DataManager.isINFO()){
-            Date date= new Date();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            String a = format.format(date);
-            Lang.print("&e┏━━━━━━━━━ PandaLib "+getDescription().getVersion()+" ━━━━━━━━━━━━━━━━━━┓");
-            Lang.print("&e┃  &fPandaLib is Running..." + "                   &e┃");
-            Lang.print("&e┃  &6最新版本: &f" + getLastVestion().get(0) + " &7| &6更新时间: &f"+ getLastVestion().get(1) +"   &e┃");
-            Lang.print("&e┃  &b作者: &fbxx2004 &7| &fhttp://linyanmc.cn/" + "      &e┃");
-            Lang.print("&e┃  &b交流群: &f1038503485  &7|  &b" + a +"  &e┃");
-            Lang.print("&e┖━━━━━━━━━━ PandaLib ━━━━━━━━━━━━━━━━━━━━━━━┛");
-        }
-        if (DataManager.getConfig().getBoolean("LIBUPDATE.UPDATEMESSAGE")){
-            if (getLastVestion().isEmpty()){
-                if (getLastVestion().get(0).equals(getDescription().getVersion())){
-                    System.out.println("PandaLib 当前无更新...");
-                }else {
-                    if (DataManager.getConfig().getBoolean("LIBUPDATE.UPDATEMESSAGE")){
-                        if (getConfig().getString("LIBUPDATE.DOWNLOADPATH").equalsIgnoreCase("none")){
-                        }else {
-                            File file = new File("plugins/PandaLib/version");
-                            if (!file.exists()){
-                                file.mkdir();
-                            }
-                            System.out.println("正在为您下载最新版本的PandaLib到目录...");
-                            if (getConfig().getString("LIBUPDATE.DOWNLOADPATH").contains("!")){
-                                PDownLoad load = new PDownLoad("http://linyanmc.cn/PandaLib/PandaLib.jar", getConfig().getString("LIBUPDATE.DOWNLOADPATH").replaceAll("!","") + "/PandaLib-"+getLastVestion()+".jar", this);
-                                load.start();
-                            }else {
-                                PDownLoad load = new PDownLoad("http://linyanmc.cn/PandaLib/PandaLib.jar", getDataFolder().getAbsolutePath() + "/" +getConfig().getString("LIBUPDATE.DOWNLOADPATH") + "/PandaLib-"+getLastVestion().get(0).replaceAll("/", "")+".jar", this);
-                                load.start();
-                            }
-                        }
-                    }
-                }
-            }else {
-                System.out.println("网络无连接...");
+import static net.bxx2004.pandalib.bukkit.pitem.PEnchantment.enchantments;
+public class PandaLib{
+    private static PYml option;
+    private static boolean isInit = false;
+    public static Plugin initPlugin;
+    private static void init(PandaLibPlugin plugin) {
+        if (!isInit){
+            initPlugin = (Plugin) plugin.getPlugin();
+            isInit = true;
+            File file = new File(plugin.getPath().split("plugins")[0] + "server");
+            if (!file.exists()){
+                file.mkdirs();
             }
+            option = new PYml(file.getAbsolutePath() + "/option.yml",true);
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    registerAction();
+                }
+            }.run();
         }
-        registerEnchantments();
     }
 
-    @Override
-    public void onDisable() {
-
+    public static String getServerLanguage(){
+        if (option.getString("__option__.language") == null){
+            option.set("__option__.language","zh_CN");
+            option.reloadYaml();
+            return "zh_CN";
+        }else {
+            return option.getString("__option__.language");
+        }
+    }
+    /**
+     * 获取某个插件的plugin.yml文件
+     * @param plugin 插件
+     * @return plugin.yml
+     */
+    public static FileConfiguration getLoadYmlFromPlugin(PandaLibPlugin plugin){
+        return YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getJarFile("plugin.yml")));
     }
 
-    public List<String> getLastVestion(){
-        List<String> list = new ArrayList<>();
+    /**
+     * 从某个插件的Jar中释放文件
+     * @param plugin 插件
+     * @param filePath 文件路径
+     * @param outPath 释放路径
+     */
+    public static void saveFileFormPlugin(PandaLibPlugin plugin,String filePath,String outPath){
         try {
-            URL url = new URL("http://linyanmc.cn/version.json");
-            InputStream is = url.openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            JsonParser parser = new JsonParser();
-            JsonArray version = (JsonArray) parser.parse(br);
-            for (int i = 0; i < version.size(); i++) {
-                JsonObject object = version.get(i).getAsJsonObject();
-                if (object.get("PluginName").getAsString().equalsIgnoreCase(getDescription().getName())){
-                    list.add(object.get("version").getAsString());
-                    list.add(object.get("date").getAsString());
-                    return list;
+            InputStreamReader input = new InputStreamReader(plugin.getJarFile(filePath),"UTF-8");
+            File file = new File(outPath);
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"), true);
+            BufferedReader reder = new BufferedReader(input);
+
+            if (!file.exists()){
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-            br.close();
-        }catch (Exception e){
-            return list;
+
+            Iterator<String> i = reder.lines().iterator();
+            while (i.hasNext()){
+                writer.println(i.next());
+            }
+            input.close();
+            writer.close();;
+            reder.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return list;
     }
-    private void registerEnchantments(){
+
+    private static void registerEnchantments(){
         new BukkitRunnable(){
             private boolean co(List<String> list, String s){
                 for (String a : list){
@@ -279,17 +257,17 @@ public class PandaLib extends JavaPlugin{
 
                         }
                     }
-                }.hook(PPlugin.getPlugin("PandaLib"));
+                }.hook(initPlugin);
             }
-        }.runTaskAsynchronously(PPlugin.getPlugin("PandaLib"));
+        }.runTaskLaterAsynchronously(initPlugin,100);
     }
-    private void registerOther(){
+    private static void registerOther(){
         if (PPlugin.getPlugin("Vault") != null){
             PVault.register();
             Lang.print("检测到 Vault 插件,相关功能已经注册!");
         }
     }
-    private void registerAction(){
+    private static void registerAction(){
         new PAction("tell"){
             @Override
             public Object run(Player player, String... args) {
@@ -329,69 +307,6 @@ public class PandaLib extends JavaPlugin{
                 return null;
             }
         };
-        new PAction("var"){
-            @Override
-            public Object run(Player player, String... args) {
-                try {
-                    String varname = args[0];
-                    String type = args[2];
-                    try {
-                        boolean value = Boolean.parseBoolean(args[1]);
-                        if (type.equalsIgnoreCase("p")){
-                            pscriptdata.set(varname,value);
-                        }
-                        if (type.equalsIgnoreCase("t")){
-                            tscriptdata.put(varname,value);
-                        }
-                    }catch (Exception e){}
-                    try {
-                        int value = Integer.parseInt(args[1]);
-                        if (type.equalsIgnoreCase("p")){
-                            pscriptdata.set(varname,value);
-                        }
-                        if (type.equalsIgnoreCase("t")){
-                            tscriptdata.put(varname,value);
-                        }
-                    }catch (Exception e){}
-                    try {
-                        float value = Float.parseFloat(args[1]);
-                        if (type.equalsIgnoreCase("p")){
-                            pscriptdata.set(varname,value);
-                        }
-                        if (type.equalsIgnoreCase("t")){
-                            tscriptdata.put(varname,value);
-                        }
-                    }catch (Exception e){}
-                    try {
-                        double value = Double.parseDouble(args[1]);
-                        if (type.equalsIgnoreCase("p")){
-                            pscriptdata.set(varname,value);
-                        }
-                        if (type.equalsIgnoreCase("t")){
-                            tscriptdata.put(varname,value);
-                        }
-                    }catch (Exception e){}
-                    try {
-                        long value = Long.parseLong(args[1]);
-                        if (type.equalsIgnoreCase("p")){
-                            pscriptdata.set(varname,value);
-                        }
-                        if (type.equalsIgnoreCase("t")){
-                            tscriptdata.put(varname,value);
-                        }
-                    }catch (Exception e){}
-                    if (type.equalsIgnoreCase("p")){
-                        pscriptdata.set(varname,args[1]);
-                    }
-                    if (type.equalsIgnoreCase("t")){
-                        tscriptdata.put(varname,args[1]);
-                    }
-                }catch (Exception e){
-                    Lang.error("&4VAR存入变量异常",args);
-                }
-                return null;
-            }
-        };
         new PAction("command"){
             @Override
             public Object run(Player player, String... args) {
@@ -418,42 +333,6 @@ public class PandaLib extends JavaPlugin{
                 return null;
             }
         };
-    }
-    private void registerCommand(){
-        new PSimpleCommand(this,"PandaLib"){
-            @Override
-            public void run() {
-                if (args.length < 1){
-                    sender.sendMessage("[PandaLib] - 请输入参数...");
-                    return;
-                }
-                if (sender.hasPermission("pandalib.admin")){
-                    if (args[0].equalsIgnoreCase("action")){
-                        PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.planguage.PAction"));
-                        HashMap map = (HashMap) var.getValue("map");
-                        sender.sendMessage("- PandaLib | 动作");
-                        for (Object s : map.keySet()){
-                            sender.sendMessage(" - " + s);
-                        }
-                    }
-                    if (args[0].equalsIgnoreCase("enchants")){
-                        PJVariable var = new PJVariable(ReflectUtils.getClass("net.bxx2004.pandalib.pitem.PEnchantment"));
-                        List<PEnchantment> enchantments = (List<PEnchantment>) var.getValue("enchantments");
-                        sender.sendMessage("- PandaLib | 附魔");
-                        for (PEnchantment s : enchantments){
-                            sender.sendMessage(s.getPluginName() + " - " + s.getEnchantName());
-                        }
-                    }
-                    if (args[0].equalsIgnoreCase("gc")){
-                        sender.sendMessage("Java内存回收...");
-                        System.gc();
-                    }
-                }else {
-                    sender.sendMessage("你没权限");
-                }
-            }
-        };
-
     }
 }
 

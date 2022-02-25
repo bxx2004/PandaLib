@@ -47,7 +47,7 @@ public class ReflectUtils {
      */
     public static Method getMethod(Class c, String methodName,Class... arms){
         try {
-            Method method = c.getMethod(methodName,arms);
+            Method method = c.getDeclaredMethod(methodName,arms);
             return method;
         } catch (Exception e) {
             e.printStackTrace();

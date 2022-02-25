@@ -1,6 +1,5 @@
 package net.bxx2004.java.sql;
 
-import it.unimi.dsi.fastutil.Hash;
 import net.bxx2004.java.sql.mysql.MySQLData;
 import net.bxx2004.java.sql.mysql.MySQLDataTerm;
 

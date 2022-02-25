@@ -3,7 +3,7 @@ package net.bxx2004.pandalib;
 import net.bxx2004.pandalib.bukkit.manager.Lang;
 import net.bxx2004.pandalib.bukkit.otherplugin.PVault;
 import net.bxx2004.pandalib.bukkit.pfile.PYml;
-import net.bxx2004.pandalib.bukkit.pitem.CustomItem;
+import net.bxx2004.pandalib.bukkit.pitem.PItemStack;
 import net.bxx2004.pandalib.bukkit.pitem.PEnchantment;
 import net.bxx2004.pandalib.bukkit.planguage.PAction;
 import net.bxx2004.pandalib.bukkit.planguage.PActionBar;
@@ -137,7 +137,7 @@ public class PandaLib{
                                             }
                                         }
                                         if (ment.getSlotType().equals(PEnchantment.SlotType.CUSTOM_ITEM)){
-                                            for (CustomItem item : ment.getCustomItem()){
+                                            for (PItemStack item : ment.getCustomItem()){
                                                 if (event.getItem().getItemMeta().equals(item.getItemMeta())){
                                                     list.add(ment);
                                                 }

@@ -87,7 +87,7 @@ public class PJVariable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return getValue(name);
+        return this.object;
     }
 
     /**

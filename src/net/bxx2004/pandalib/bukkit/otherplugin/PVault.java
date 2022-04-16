@@ -16,10 +16,6 @@ import static org.bukkit.Bukkit.getServer;
  * 如果服务器装有Vault插件则可以使用!
  */
 public class PVault {
-    static {
-        PJMethod method = new PJMethod(PandaLib.class);
-        method.InPutName("registerOther").InPutArg(null).run(null);
-    }
     private static Economy economy = null;
     private static Chat chat = null;
     private static Permission permission = null;

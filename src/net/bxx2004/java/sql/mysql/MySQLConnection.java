@@ -11,8 +11,6 @@ import java.sql.DriverManager;
 public class MySQLConnection implements SQLConnection {
     private Connection connection;
     private String url;
-    private String username;
-    private String password;
     private String database;
 
     /**
@@ -40,14 +38,6 @@ public class MySQLConnection implements SQLConnection {
 
     public String getUrl() {
         return url;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getDatabase() {

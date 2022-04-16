@@ -17,10 +17,4 @@ public interface ImpParticle {
      * @return 类型
      */
     public String getType();
-
-    /**
-     * 以该坐标为中心绘画粒子特效(发包)
-     * @param location 位置
-     */
-    public void showPacket(Location location);
 }

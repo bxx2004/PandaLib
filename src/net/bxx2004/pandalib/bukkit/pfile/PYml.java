@@ -1,5 +1,6 @@
 package net.bxx2004.pandalib.bukkit.pfile;
 
+import net.bxx2004.pandalib.bukkit.pitem.PItemStack;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -91,6 +92,15 @@ public class PYml implements CustomFile{
      */
     public String getString(String key){
         return (String) get(key);
+    }
+    public PItemStack getItem(String key){ return new PItemStack(yaml.getItemStack(key));}
+    /**
+     * 获取Boolean类型值
+     * @param key 键
+     * @return Boolean类型值
+     */
+    public boolean getBoolean(String key){
+        return (boolean) get(key);
     }
 
     /**

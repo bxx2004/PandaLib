@@ -56,7 +56,7 @@ public class PPds {
     public void run(int i,Player player){
         String a = txt.read(i);
         if (!a.trim().isEmpty()){
-            PAction.goWord(a,player);
+            PAction.go(a,player);
         }
     }
     /**

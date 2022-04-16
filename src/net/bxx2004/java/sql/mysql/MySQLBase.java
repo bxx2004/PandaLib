@@ -4,10 +4,12 @@ import net.bxx2004.java.sql.*;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * MySQL基本操作
@@ -23,7 +25,19 @@ public class MySQLBase implements SQLBase{
         this.tableName = tableName;
         this.connection = connection;
     }
-
+    public boolean hasData(SQLData data){
+        MySQLData mySQLData = (MySQLData)data;
+        String sql="select * from "+tableName+" where "+mySQLData.row+"='"+ mySQLData.valueAsString() +"' ";
+        ResultSet rs = runQuery(sql);
+        try {
+            if (rs.next()){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     @Override
     @SQL(platform = SQLPlatForm.MYSQL,type = Type.INSERT)
     public void insert(SQLData... data) {

@@ -1,15 +1,10 @@
 package net.bxx2004.pandalib.bukkit.pentity;
 
 import net.bxx2004.pandalib.bukkit.pfile.PYml;
-import net.bxx2004.pandalib.bukkit.plistener.PListener;
-import net.bxx2004.pandalib.bukkit.plistener.event.PDisplayClickEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.*;
 
@@ -23,7 +18,9 @@ public class PDisplay {
     private double linedistance = 0.25;;
     private Location location;
     private String id;
-    private boolean listener;
+    public PDisplay(){
+
+    }
     /**
      * 构造一个全息投影类
      */
@@ -32,7 +29,6 @@ public class PDisplay {
         this.nowLine = 0;
         this.content = new HashMap<Integer,String>();
     }
-
     /**
      * 添加文本
      * @param content 文本内容
@@ -59,13 +55,9 @@ public class PDisplay {
      * @param location 位置
      * @return 当前构造器
      */
-    public PDisplay spawn(Location location,boolean listener){
-        this.listener = listener;
+    public PDisplay spawn(Location location){
         this.them = new Entity[this.content.keySet().size() + 1];
         callEntity(location);
-        if (listener){
-            hookListener();
-        }
         return this;
     }
 
@@ -84,7 +76,7 @@ public class PDisplay {
      */
     public void teleport(Location location){
         this.remove();
-        spawn(location,listener);
+        spawn(location);
     }
     private void callEntity(Location location){
         this.location = location;
@@ -122,7 +114,7 @@ public class PDisplay {
         list.toArray(aa);
         PDisplay display = new PDisplay(id).inputContent(aa);
         display.setDistance(distance);
-        display.spawn(location,listener);
+        display.spawn(location);
         return display;
     }
 
@@ -135,26 +127,9 @@ public class PDisplay {
         yml.set(name + ".id",this.id);
         yml.set(name + ".location",this.location);
         yml.set(name + ".content",this.content);
-        yml.set(name + ".listener",this.listener);
         yml.set(name + ".distance",this.linedistance);
     }
     private PDisplay getInstance(){
         return this;
-    }
-    private void hookListener(){
-        new PListener(){
-            @EventHandler
-            public void onClick(PlayerInteractEvent event){
-                Collection<Entity> e = event.getPlayer().getWorld().getNearbyEntitiesByType(ArmorStand.class,location,2);
-                for (int i = 0 ;i < content.keySet().size(); i++){
-                    for (Entity s : e){
-                        if (them[i + 1] == s){
-                            Bukkit.getServer().getPluginManager().callEvent(new PDisplayClickEvent(getInstance(),event.getPlayer()));
-                            return;
-                        }
-                    }
-                }
-            }
-        }.hook("Pandalib");
     }
 }

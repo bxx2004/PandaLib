@@ -4,6 +4,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -49,7 +50,7 @@ public class PHelper {
      * @param key 键
      * @param lang true为中文
      */
-    public void toPlayerOfKey(Player player, String key, boolean lang){
+    public void toPlayerOfKey(CommandSender player, String key, boolean lang){
         if (lang){
             String[] value = map.get(key).split(",");
             List<String> list = new ArrayList();
@@ -92,7 +93,7 @@ public class PHelper {
      * @param title 插件名称
      * @param message 信息(命令-描述,命令2-描述2)
      */
-    public static void To(Player player,String title, String... message){
+    public static void To(CommandSender player, String title, String... message){
         player.sendMessage("§c§l§o"+ title.replaceAll("&", "§") +" §f| §dCommandHelper§6§l>>>");
         for (String m : message){
             String[] a = m.split("[-]");

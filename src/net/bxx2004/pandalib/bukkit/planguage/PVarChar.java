@@ -36,7 +36,7 @@ public class PVarChar {
      * @return 取出的变量
      */
     public Object get(String key){
-        return newmap.get(key).vaule();
+        return newmap.get(key).vaule(key);
     }
     /**
      * 取出一个变量
@@ -44,31 +44,31 @@ public class PVarChar {
      * @return 取出的变量
      */
     public String getAsString(String key){
-        return (String) newmap.get(key).vaule();
+        return (String) newmap.get(key).vaule(key);
     }
     public Integer getAsInt(String key){
-        return (int) newmap.get(key).vaule();
+        return (int) newmap.get(key).vaule(key);
     }
     public Boolean getAsBoolean(String key){
-        return (boolean) newmap.get(key).vaule();
+        return (boolean) newmap.get(key).vaule(key);
     }
     public Byte getAsByte(String key){
-        return (byte) newmap.get(key).vaule();
+        return (byte) newmap.get(key).vaule(key);
     }
     public Short getAsShort(String key){
-        return (short) newmap.get(key).vaule();
+        return (short) newmap.get(key).vaule(key);
     }
     public Long getAsLong(String key){
-        return (long) newmap.get(key).vaule();
+        return (long) newmap.get(key).vaule(key);
     }
     public Float getAsFloat(String key){
-        return (float) newmap.get(key).vaule();
+        return (float) newmap.get(key).vaule(key);
     }
     public Double getAsDouble(String key){
-        return (double) newmap.get(key).vaule();
+        return (double) newmap.get(key).vaule(key);
     }
     public Character getAsChar(String key){
-        return (char) newmap.get(key).vaule();
+        return (char) newmap.get(key).vaule(key);
     }
     /**
      * 获取一个PVarCharObject对象

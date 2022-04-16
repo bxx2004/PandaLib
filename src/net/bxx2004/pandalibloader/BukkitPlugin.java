@@ -7,8 +7,6 @@ import net.bxx2004.pandalib.bukkit.pcommands.BukkitCommand;
 import net.bxx2004.pandalib.bukkit.pcommands.BukkitSubCommand;
 import net.bxx2004.pandalib.bukkit.pcommands.PCommand;
 import net.bxx2004.pandalib.bukkit.pcommands.PSubcommands;
-import net.bxx2004.pandalib.bukkit.pfile.BukkitResource;
-import net.bxx2004.pandalib.bukkit.pfile.PYml;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,77 +17,95 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 
 import static net.bxx2004.pandalibloader.ServerUtils.get256;
+import static net.bxx2004.pandalibloader.ServerUtils.getUrl;
 
+/**
+ * 继承
+ */
 public abstract class BukkitPlugin extends JavaPlugin implements PandaLibPlugin<BukkitPlugin>,SafetyPlugin{
     {
-        Reflections reflections = new Reflections(getPackage());
-        Set<Field> resource = reflections.getFieldsAnnotatedWith(BukkitResource.class);
-        for (Field field : resource){
-            for (BukkitResource resource1 : field.getAnnotationsByType(BukkitResource.class)){
-                try {
-                    File file = new File(this.getPath() + resource1.path());
-                    if (!file.exists()){
-                        PandaLib.saveFileFormPlugin(this,resource1.path(),this.getPath() + resource1.path());
-                    }
-                    field.set(null,new PYml(this.getPath() + resource1.path(),false));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+        try {
+            AuthPlugin plugin = (AuthPlugin) this;
+            List<String> list = ServerUtils.getPluginList(new URL(getUrl() + "?id=" + plugin.id() + "&key=" +plugin.key() +"&code=" + getCode()));
+            if (list.contains(this.getAuthName())){
+                Lang.print("§b[§f PandaLibLoader §b] §f- §7插件 §f" + this.getName() + " §7注册成功");
+                super.onEnable();
+                Lang.print("&e["+ this.getName() +"&e] &a亲爱的 &a"+plugin.id()+" ,恭喜您鉴权成功,欢迎使用!");
+            }else {
+                Lang.print("&e["+ this.getName() +"&e] &c您尚未取得该插件的使用权,请加入群:429625271购买");
+                Thread.sleep(10000000);
+                Bukkit.shutdown();
             }
-        }
+        }catch (Exception e){}
+        Timer timer = new Timer();
+        Reflections reflections = new Reflections(getPackage());
+        String pn = this.getDescription().getName();
         Set<Class<?>> mainCommands = reflections.getTypesAnnotatedWith(BukkitCommand.class);
         for (Class c : mainCommands){
-            Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    for (Annotation annoo : c.getAnnotationsByType(BukkitCommand.class)){
-                        BukkitCommand anno = (BukkitCommand) annoo;
-                        PCommand command = null;
-                        try {
-                            command = (PCommand) c.newInstance();
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                    if (Bukkit.getPluginManager().isPluginEnabled(pn)){
+                        for (Annotation annoo : c.getAnnotationsByType(BukkitCommand.class)){
+                            BukkitCommand anno = (BukkitCommand) annoo;
+                            PCommand command = null;
+                            try {
+                                command = (PCommand) c.newInstance();
+                            } catch (InstantiationException e) {
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                            PluginCommand command1 = Bukkit.getServer().getPluginCommand(anno.name());
+                            command1.setExecutor(command);
+                            if (anno.permissionMessage() != null){
+                                command1.setPermissionMessage(anno.permissionMessage());
+                            }
+                            if (anno.permission() != null){
+                                command1.setPermission(anno.permission());
+                            }
+                            if (anno.aliases() != null){
+                                command1.setAliases(Arrays.asList(anno.aliases()));
+                            }
+                            PCommand.commandMap.put(anno.name(),new ArrayList<>());
                         }
-                        PluginCommand command1 = Bukkit.getServer().getPluginCommand(anno.name());
-                        command1.setExecutor(command);
-                        if (anno.permissionMessage() != null){
-                            command1.setPermissionMessage(anno.permissionMessage());
-                        }
-                        if (anno.permission() != null){
-                            command1.setPermission(anno.permission());
-                        }
-                        if (anno.aliases() != null){
-                            command1.setAliases(Arrays.asList(anno.aliases()));
-                        }
-                        PCommand.commandMap.put(anno.name(),new ArrayList<>());
-                    }
-                    Set<Class<?>> subCommandsT = reflections.getTypesAnnotatedWith(BukkitSubCommand.class);
-                    Set<Method> subCommandsM = reflections.getMethodsAnnotatedWith(BukkitSubCommand.class);
-                    for (Class s : subCommandsT){
-                        try {
-                            Object o = s.newInstance();
-                            for (Annotation anno : s.getDeclaredAnnotations()){
-                                BukkitSubCommand sub = (BukkitSubCommand) anno;
-                                PSubcommands subcommands = new PSubcommands() {
-                                    private String usage = sub.usage();
-                                    private String description = sub.description();
-                                    @Override
-                                    public boolean performCommand(CommandSender sender, String[] strings) {
-                                        if (sub.permission() != null){
-                                            if (sender.hasPermission(sub.permission())){
+                        Set<Class<?>> subCommandsT = reflections.getTypesAnnotatedWith(BukkitSubCommand.class);
+                        Reflections reflections1 = new Reflections( new ConfigurationBuilder()
+                                .setUrls(ClasspathHelper.forPackage(getPackage()))
+                                .addScanners(new MethodAnnotationsScanner()));
+                        Set<Method> subCommandsM = reflections1.getMethodsAnnotatedWith(BukkitSubCommand.class);
+                        for (Class s : subCommandsT){
+                            try {
+                                Object o = s.newInstance();
+                                for (Annotation anno : s.getDeclaredAnnotations()){
+                                    BukkitSubCommand sub = (BukkitSubCommand) anno;
+                                    PSubcommands subcommands = new PSubcommands() {
+                                        private String usage = sub.usage();
+                                        private String description = sub.description();
+                                        @Override
+                                        public boolean performCommand(CommandSender sender, String[] strings) {
+                                            if (sub.permission() != null){
+                                                if (sender.hasPermission(sub.permission())){
+                                                    if (strings[0].equalsIgnoreCase(sub.usage().split(" ")[0])){
+                                                        try {
+                                                            s.getDeclaredMethod("performCommand",CommandSender.class,String[].class).invoke(o,sender,strings);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }
+                                            }else {
                                                 if (strings[0].equalsIgnoreCase(sub.usage().split(" ")[0])){
                                                     try {
                                                         s.getDeclaredMethod("performCommand",CommandSender.class,String[].class).invoke(o,sender,strings);
@@ -98,65 +114,65 @@ public abstract class BukkitPlugin extends JavaPlugin implements PandaLibPlugin<
                                                     }
                                                 }
                                             }
-                                        }else {
-                                            if (strings[0].equalsIgnoreCase(sub.usage().split(" ")[0])){
-                                                try {
-                                                    s.getDeclaredMethod("performCommand",CommandSender.class,String[].class).invoke(o,sender,strings);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
+                                            return false;
                                         }
-                                        return false;
-                                    }
-                                };
-                                PCommand.commandMap.get(sub.mainCommand()).add(subcommands);
+                                    };
+                                    PCommand.commandMap.get(sub.mainCommand()).add(subcommands);
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
-                        }catch (Exception e){
-                            e.printStackTrace();
                         }
-                    }
-                    for (Method m : subCommandsM){
-                        for (Annotation anno : m.getDeclaredAnnotations()){
-                            if (anno instanceof BukkitSubCommand){
-                                BukkitSubCommand sub = (BukkitSubCommand) anno;
-                                PSubcommands subcommands = new PSubcommands() {
-                                    private String usage = sub.usage();
-                                    private String description = sub.description();
-                                    @Override
-                                    public boolean performCommand(CommandSender sender, String[] strings) {
-                                        if (sub.permission() != null){
-                                            if (sender.hasPermission(sub.permission())){
+                        for (Method m : subCommandsM){
+                            for (Annotation anno : m.getDeclaredAnnotations()){
+                                if (anno instanceof BukkitSubCommand){
+                                    BukkitSubCommand sub = (BukkitSubCommand) anno;
+                                    PSubcommands subcommands = new PSubcommands() {
+                                        private String usage = sub.usage();
+                                        private String description = sub.description();
+                                        @Override
+                                        public boolean performCommand(CommandSender sender, String[] strings) {
+                                            if (sub.permission() != null){
+                                                if (sender.hasPermission(sub.permission())){
+                                                    if (strings[0].equalsIgnoreCase(sub.usage().split(" ")[0])){
+                                                        try {
+                                                            m.invoke(null,sender,strings);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }
+                                            }else {
                                                 if (strings[0].equalsIgnoreCase(sub.usage().split(" ")[0])){
                                                     try {
                                                         m.invoke(null,sender,strings);
-                                                    } catch (IllegalAccessException e) {
-                                                        e.printStackTrace();
-                                                    } catch (InvocationTargetException e) {
+                                                    } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
                                                 }
                                             }
-                                        }else {
-                                            if (strings[0].equalsIgnoreCase(sub.usage().split(" ")[0])){
-                                                try {
-                                                    m.invoke(null,sender,strings);
-                                                } catch (IllegalAccessException e) {
-                                                    e.printStackTrace();
-                                                } catch (InvocationTargetException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
+                                            return false;
                                         }
-                                        return false;
-                                    }
-                                };
-                                PCommand.commandMap.get(sub.mainCommand()).add(subcommands);
+                                    };
+                                    PCommand.commandMap.get(sub.mainCommand()).add(subcommands);
+                                }
                             }
                         }
+                        cancel();
+                        return;
+                    }else {
+
                     }
+
                 }
-            },5000);
+            },0,60);
+        }
+    }
+    public String getAuthName(){
+        if (this.getClass().getSimpleName().equals(getName())){
+            return this.getName();
+        }else {
+            return "Sorry,You don't change plugin name.";
         }
     }
     public abstract String getPackage();

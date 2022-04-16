@@ -4,11 +4,11 @@ import net.bxx2004.pandalib.bukkit.manager.Lang;
 import net.bxx2004.pandalib.bukkit.otherplugin.PVault;
 import net.bxx2004.pandalib.bukkit.pfile.PYml;
 import net.bxx2004.pandalib.bukkit.pitem.PItemStack;
-import net.bxx2004.pandalib.bukkit.pitem.PEnchantment;
 import net.bxx2004.pandalib.bukkit.planguage.PAction;
 import net.bxx2004.pandalib.bukkit.planguage.PActionBar;
 import net.bxx2004.pandalib.bukkit.planguage.PMessage;
 import net.bxx2004.pandalib.bukkit.planguage.PTitle;
+import net.bxx2004.pandalib.bukkit.planguage.pactionextend.PlayerControl;
 import net.bxx2004.pandalib.bukkit.plistener.PListener;
 import net.bxx2004.pandalib.bukkit.putil.PMath;
 import net.bxx2004.pandalib.bukkit.putil.PPlugin;
@@ -18,21 +18,13 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
 import java.util.*;
-
-import static net.bxx2004.pandalib.bukkit.pitem.PEnchantment.enchantments;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 public class PandaLib{
     private static PYml option;
     private static boolean isInit = false;
@@ -72,7 +64,17 @@ public class PandaLib{
     public static FileConfiguration getLoadYmlFromPlugin(PandaLibPlugin plugin){
         return YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getJarFile("plugin.yml")));
     }
-
+    public static void connect(Player player,String server){
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(b);
+        try {
+            out.writeUTF("Connect");
+            out.writeUTF(server);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        player.sendPluginMessage(initPlugin, "BungeeCord", b.toByteArray());
+    }
     /**
      * 从某个插件的Jar中释放文件
      * @param plugin 插件
@@ -106,171 +108,229 @@ public class PandaLib{
         }
     }
 
-    private static void registerEnchantments(){
-        new BukkitRunnable(){
-            private boolean co(List<String> list, String s){
-                for (String a : list){
-                    if (a.contains(s)){
-                        return true;
-                    }else {
-                        continue;
-                    }
-                }
-                return false;
-            }
-            HashMap<String,List<PEnchantment>> canviews;
-            @Override
-            public void run() {
-                new PListener(){
-                    @EventHandler
-                    public void onTable(PrepareItemEnchantEvent event){
-                        for (PEnchantment enchantment : enchantments){
-                            if (enchantment.canRegisterEnchantTable().isCan()){
-                                if (event.getEnchantmentBonus() >= enchantment.canRegisterEnchantTable().getEnchantchance()){
-                                    canviews = new HashMap<>();
-                                    List<PEnchantment> list = new ArrayList<>();
-                                    for (PEnchantment ment : enchantments){
-                                        if (ment.getSlotType().equals(PEnchantment.SlotType.ALL_ITEM) || event.getItem().getType().toString().split("_")[1].equalsIgnoreCase(ment.getSlotType().toString())){
-                                            int r = PMath.getRandomAsInt(0,100);
-                                            if (ment.canRegisterEnchantTable().getChance() > r){
-                                                list.add(ment);
-                                            }
-                                        }
-                                        if (ment.getSlotType().equals(PEnchantment.SlotType.CUSTOM_ITEM)){
-                                            for (PItemStack item : ment.getCustomItem()){
-                                                if (event.getItem().getItemMeta().equals(item.getItemMeta())){
-                                                    list.add(ment);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    canviews.put(event.getEnchanter().getName(), list);
-                                }
-                            }
-                        }
-                    }
-                    @EventHandler
-                    public void onTable_2(EnchantItemEvent event){
-                        try {
-                            List<PEnchantment> list = canviews.get(event.getEnchanter().getName());
-                            int r = PMath.getRandomAsInt(0,list.size());
-                            int l = PMath.getRandomAsInt(list.get(r).getMinLevel(), list.get(r).getMaxLevel());
-                            ItemStack three = event.getItem();
-                            if (three.hasItemMeta()){
-                                ItemMeta meta = three.getItemMeta();
-                                List<String> list1 = meta.getLore();
-                                list1.add(list.get(r).getEnchantColor() + list.get(r).getEnchantName() + " " + l);
-                                meta.setLore(list1);
-                                three.setItemMeta(meta);
-                            }else {
-                                ItemMeta meta = three.getItemMeta();
-                                List<String> list2 = new ArrayList<>();
-                                list2.add(list.get(r).getEnchantColor() + list.get(r).getEnchantName() + " " + l);
-                                meta.setLore(list2);
-                                three.setItemMeta(meta);
-                            }
-                            canviews.remove(event.getEnchanter().getName());
-                        }catch (Exception e){}
-                    }
-                    @EventHandler
-                    public void onUseAnvil(PrepareAnvilEvent event){
-                        try {
-                            if (event.getInventory().getType().equals(InventoryType.ANVIL)){
-                                for (PEnchantment ment : enchantments){
-                                    if (ment.canUseOfAnvil()){
-                                        ItemStack one = event.getInventory().getItem(0);
-                                        ItemStack two = event.getInventory().getItem(1);
-
-                                        if ((co(two.getLore(),ment.getEnchantName())) && (one.getAmount() == 1)){
-                                            ItemStack three = one.clone();
-                                            for (String s : two.getItemMeta().getLore()){
-                                                if (s.contains(ment.getEnchantName())){
-                                                    if (one.hasItemMeta()){
-                                                        List<String> onel = new ArrayList<>();
-                                                        for (String as : one.getItemMeta().getLore()){
-                                                            onel.add(as.split(" ")[0]);
-                                                        }
-                                                        if (onel.contains(s.split(" ")[0])) {
-                                                            three = null;
-                                                        }else {
-                                                            if (three.hasItemMeta()){
-                                                                ItemMeta meta = three.getItemMeta();
-                                                                List<String> list = meta.getLore();
-                                                                list.add(ment.getEnchantColor() + ment.getEnchantName() + " " + s.split(" ")[1]);
-                                                                meta.setLore(list);
-                                                                three.setItemMeta(meta);
-                                                            }else {
-                                                                ItemMeta meta = three.getItemMeta();
-                                                                List<String> list = new ArrayList<>();
-                                                                list.add(ment.getEnchantColor() + ment.getEnchantName() + " " + s.split(" ")[1]);
-                                                                meta.setLore(list);
-                                                                three.setItemMeta(meta);
-                                                            }
-                                                        }
-                                                    }else {
-                                                        if (three.hasItemMeta()){
-                                                            ItemMeta meta = three.getItemMeta();
-                                                            List<String> list = meta.getLore();
-                                                            list.add(ment.getEnchantColor() + ment.getEnchantName() + " " + s.split(" ")[1]);
-                                                            meta.setLore(list);
-                                                            three.setItemMeta(meta);
-                                                        }else {
-                                                            ItemMeta meta = three.getItemMeta();
-                                                            List<String> list = new ArrayList<>();
-                                                            list.add(ment.getEnchantColor() + ment.getEnchantName() + " " + s.split(" ")[1]);
-                                                            meta.setLore(list);
-                                                            three.setItemMeta(meta);
-                                                        }
-                                                    }
-                                                    event.setResult(three);
-                                                    break;
-                                                }
-                                            }
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }catch (NullPointerException e){
-
-                        }
-                    }
-                    @EventHandler
-                    public void onClick(InventoryClickEvent event){
-                        try {
-                            if (event.getInventory().getType().equals(InventoryType.ANVIL)){
-                                for (PEnchantment ment : enchantments){
-                                    ItemStack one = event.getInventory().getItem(0);
-                                    ItemStack two = event.getInventory().getItem(1);
-                                    ItemStack three = event.getInventory().getItem(2);
-                                    if ((three != null) && (co(two.getLore(),ment.getEnchantName())) && (one.getAmount() == 1)){
-                                        if (event.getRawSlot() == 2){
-                                            event.setCursor(event.getInventory().getItem(2));
-                                            event.getInventory().setItem(0, new ItemStack(Material.AIR));
-                                            event.getInventory().setItem(1, new ItemStack(Material.AIR));
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }catch (Exception e){
-
-                        }
-                    }
-                }.hook(initPlugin);
-            }
-        }.runTaskLaterAsynchronously(initPlugin,100);
-    }
     private static void registerOther(){
         if (PPlugin.getPlugin("Vault") != null){
             PVault.register();
             Lang.print("检测到 Vault 插件,相关功能已经注册!");
         }
     }
+    public  static HashMap<String,String> data = new HashMap<>();
     private static void registerAction(){
+        new PlayerControl();
+        //operate (+ - * /) 1 1 1 1 1
+        new PAction("operate"){
+            @Override
+            public Object run(Player player, String... args) {
+                String type = args[0];
+                if (type.equals("+")){
+                    double data = 0.00;
+                    for (int i = 1; i < args.length; i++){
+                        double d = Double.parseDouble(args[i]);
+                        data = data + d;
+                    }
+                    return data;
+                }
+                if (type.equals("-")){
+                    double data = Double.parseDouble(args[1]);;
+                    for (int i = 2; i < args.length; i++){
+                        double d = Double.parseDouble(args[i]);
+                        data = data - d;
+                    }
+                    return data;
+                }
+                if (type.equals("*")){
+                    double data = Double.parseDouble(args[1]);;
+                    for (int i = 2; i < args.length; i++){
+                        double d = Double.parseDouble(args[i]);
+                        data = data * d;
+                    }
+                    return data;
+                }
+                if (type.equals("/")){
+                    double data = Double.parseDouble(args[1]);;
+                    for (int i = 2; i < args.length; i++){
+                        double d = Double.parseDouble(args[i]);
+                        data = data / d;
+                    }
+                    return data;
+                }
+                return 0.00;
+            }
+        };
+
+        //while con t => t => t
+        new PAction("while"){
+            @Override
+            public Object run(Player player, String... args) {
+                try {
+                    boolean c = Boolean.parseBoolean(args[0]);
+                    while (c){
+                        for (int i = 1; i < args.length; i = i + 2){
+                            PAction.go(args[i],player);
+                        }
+                    }
+                }catch (Exception e){
+                    boolean c = Boolean.parseBoolean(PAction.go(args[0],player).toString());
+                    while (c){
+                        c = Boolean.parseBoolean(PAction.go(args[0],player).toString());
+                        for (int i = 1; i < args.length; i = i + 2){
+                            PAction.go(args[i],player);
+                        }
+                    }
+                }
+                return null;
+            }
+        };
+        //for 5 t => t => t
+        new PAction("for"){
+            @Override
+            public Object run(Player player, String... args) {
+                try {
+                    int c = Integer.parseInt(args[0]);
+                    for (int a = 0;a<c;a++){
+                        for (int i = 1; i < args.length; i = i + 2){
+                            PAction.go(args[i],player);
+                        }
+                    }
+                }catch (Exception e){
+                    int c = Integer.parseInt(PAction.go(args[0],player).toString());
+                    for (int a = 0;a<c;a++){
+                        for (int i = 1; i < args.length; i = i + 2){
+                            PAction.go(args[i],player);
+                        }
+                    }
+                }
+                return null;
+            }
+        };
+        //value a
+        new PAction("value"){
+            @Override
+            public Object run(Player player, String... args) {
+                return data.get(args[0]);
+            }
+        };
+        //var a = some
+        new PAction("var"){
+            @Override
+            public Object run(Player player, String... args) {
+                String cache = "";
+                for (int i = 0 ; i< args.length; i++){
+                    if (i==0){
+                        cache +=args[i];
+                    }else {
+                        cache += " " + args[i];
+                    }
+                }
+                String word = cache.split("=")[1].trim();
+                try {
+                    int a =Integer.parseInt(word);
+                    data.put(args[0], String.valueOf(a));
+                }catch (Exception e){
+                    if (word.contains(" ")){
+                        data.put(args[0],PAction.go(word,player).toString());
+                    }else {
+                        data.put(args[0],args[2]);
+                    }
+                }
+                return null;
+            }
+        };
+        //check a = b
+        new PAction("check"){
+            @Override
+            public Object run(Player player, String... args) {
+                try {
+                    Double a =Double.parseDouble(args[0]);
+                    Double b =Double.parseDouble(args[2]);
+                    String type = args[1];
+                    if (type.equalsIgnoreCase(">")){
+                        return a>b;
+                    }
+                    if (type.equalsIgnoreCase(">=")){
+                        return a>=b;
+                    }
+                    if (type.equalsIgnoreCase("==")){
+                        return a==b;
+                    }
+                    if (type.equalsIgnoreCase("<")){
+                        return a<b;
+                    }
+                    if (type.equalsIgnoreCase("<=")){
+                        return a<b;
+                    }
+                }catch (Exception e){
+                    String a = args[0];
+                    String b = args[2];
+                    try {
+                        double a1 =Double.parseDouble(PAction.go(a,player).toString());
+                        double b1=Double.parseDouble(PAction.go(b,player).toString());
+                        String type1 = args[1];
+                        if (type1.equalsIgnoreCase(">")){
+                            return a1>b1;
+                        }
+                        if (type1.equalsIgnoreCase(">=")){
+                            return a1>=b1;
+                        }
+                        if (type1.equalsIgnoreCase("==")){
+                            return a1==b1;
+                        }
+                        if (type1.equalsIgnoreCase("<")){
+                            return a1<b1;
+                        }
+                        if (type1.equalsIgnoreCase("<=")){
+                            return a1<=b1;
+                        }
+                    }catch (Exception ex){
+                        return a.equals(b);
+                    }
+                }
+                return false;
+            }
+        };
+        // if (condition) some0 => some1 => some2 : some0 => some1 => some2
+        new PAction("if"){
+            @Override
+            public Object run(Player player, String... args) {
+                String cache = "";
+                for (int i = 0 ; i< args.length; i++){
+                    if (i==0){
+                        cache +=args[i];
+                    } else {
+                        cache += " " + args[i];
+                    }
+                }
+                String pattern = "\\(.*\\)";
+                Pattern r = Pattern.compile(pattern);
+                Matcher m = r.matcher(cache);
+                while (m.find()){
+                    String condition = m.group().replaceAll("\\(","").replaceAll("\\)","");;
+                    String newC = cache.substring(cache.indexOf(")") + 1);
+                    boolean result = PMath.sum(player,condition);
+                    String[] y = newC.split(":")[0].split("=>");
+                    String[] n = newC.split(":")[1].split("=>");
+                    if (result){
+                        for (String s : y){
+                            PAction.go(s.trim(),player);
+                        }
+                        return true;
+                    }else {
+                        for (String s : n){
+                            PAction.go(s.trim(),player);
+                        }
+                        return false;
+                    }
+                }
+                return false;
+            }
+        };
         new PAction("tell"){
             @Override
             public Object run(Player player, String... args) {
+                if (args[0].contains("$")){
+                    PMessage.to(player,PAction.go(args[0],player).toString());
+                    return null;
+                }
                 PMessage.to(player,args[0]);
                 return null;
             }
@@ -278,6 +338,15 @@ public class PandaLib{
         new PAction("title"){
             @Override
             public Object run(Player player, String... args) {
+                if (args[0].contains("$")){
+                    if (args.length > 1){
+                        PTitle.To(player,PAction.go(args[0],player).toString() + "&nbsp" + PAction.go(args[1],player).toString());
+                    }else {
+                        PTitle.To(player,PAction.go(args[0],player).toString());
+                    }
+                    return null;
+                }
+
                 if (args.length > 1){
                     PTitle.To(player,args[0] + "&nbsp" + args[1]);
                 }else {
@@ -289,6 +358,10 @@ public class PandaLib{
         new PAction("actionbar"){
             @Override
             public Object run(Player player, String... args) {
+                if (args[0].contains("$")){
+                    PActionBar.To(player,PAction.go(args[0],player).toString());
+                    return null;
+                }
                 PActionBar.To(player,args[0]);
                 return null;
             }
@@ -303,6 +376,10 @@ public class PandaLib{
         new PAction("print"){
             @Override
             public Object run(Player player, String... args) {
+                if (args[0].contains("$")){
+                    Bukkit.getConsoleSender().sendMessage(PAction.go(args[0],player).toString().replaceAll("&", "§"));
+                    return null;
+                }
                 Bukkit.getConsoleSender().sendMessage(args[0].replaceAll("&", "§"));
                 return null;
             }

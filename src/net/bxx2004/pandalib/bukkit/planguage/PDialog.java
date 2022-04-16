@@ -75,12 +75,14 @@ public class PDialog {
         for (List<String> list : map.get(key).keySet()){
             PMessage.toList(player,list);
             player.sendMessage(" ");
-            for (String s : map.get(key).get(list)){
-                if (s.contains("=")){
-                    String[] b = s.split("=");
-                    PMessage.to2(player,b[0], ClickEvent.Action.RUN_COMMAND,"/" + b[1], b[0]);
-                }else {
-                    PMessage.to(player, s);
+            if (map.get(key).get(list) != null){
+                for (String s : map.get(key).get(list)){
+                    if (s.contains("=")){
+                        String[] b = s.split("=");
+                        PMessage.to2(player,b[0], ClickEvent.Action.RUN_COMMAND,"/" + b[1], b[0]);
+                    }else {
+                        PMessage.to(player, s);
+                    }
                 }
             }
         }

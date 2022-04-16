@@ -1,36 +1,56 @@
 package net.bxx2004.pandalib.bukkit.pparticle;
 
-import org.bukkit.Location;
-import org.bukkit.Particle;
+import java.util.HashMap;
 
 /**
- * 代表一个简单的粒子
+ * 粒子构造器
  */
-public class PParticle implements ImpParticle{
-    public int i;
-    public Particle particle;
+public abstract class PParticle {
+    private HashMap<MathUnit,Double> map;
 
     /**
-     * 构造粒子对象
-     * @param particle 粒子
-     * @param i 次数
+     * 构造一个粒子构造器
+     * @param type 单位
+     * @param size 数值
      */
-    public PParticle(Particle particle, int i){
-        this.particle = particle;
-        this.i = i;
+    public PParticle(MathUnit[] type, double[] size){
+        this.map = new HashMap<MathUnit, Double>();
+        for (int i = 0; i < type.length; i++){
+            this.map.put(type[i],size[i]);
+        }
     }
 
-    @Override
-    public void show(Location location) {
-        location.getWorld().spawnParticle(particle,location,i);
+    /**
+     * 获取值
+     * @param mathUnit 数学符号
+     * @return 值
+     */
+    public double value(MathUnit mathUnit){
+        return map.get(mathUnit);
     }
-    @Override
-    public void showPacket(Location location) {
-
-    }
-
-    @Override
-    public String getType() {
-        return "PParticle";
+    /**
+     * 单位
+     */
+    public enum MathUnit{
+        /**
+         * 长
+         */
+        LONG,
+        /**
+         * 宽
+         */
+        WIDE,
+        /**
+         * 高
+         */
+        HEIGHT,
+        /**
+         * 半径
+         */
+        RIDIUS,
+        /**
+         * 步长
+         */
+        STEP,
     }
 }

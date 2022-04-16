@@ -63,7 +63,7 @@ public class PPageGui extends CustomGui{
                 unhook();
             }
         }
-    }.hook(PandaLib.initPlugin);
+    }.hook(PandaLib.initPlugin.getName());
     private Inventory pagegui;
     private PItemStack tip;
     private PItemStack barrier;
@@ -308,7 +308,7 @@ public class PPageGui extends CustomGui{
                 int i = 18;
                 @Override
                 public void run() {
-                    pagegui.setItem(i,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
+                    pagegui.setItem(i,new PItemStack(Material.BARRIER,"&e加载中···"));
                     i= i+1;
                     if (i > 26){
                         update();
@@ -323,9 +323,9 @@ public class PPageGui extends CustomGui{
             }.runTaskTimerAsynchronously(PandaLib.initPlugin,0,speed);
         }
         if (animation == Animation.BRUSH){
-            pagegui.setItem(9,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
-            pagegui.setItem(27,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
-            pagegui.setItem(45,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
+            pagegui.setItem(9,new PItemStack(Material.BARRIER,"&e加载中···"));
+            pagegui.setItem(27,new PItemStack(Material.BARRIER,"&e加载中···"));
+            pagegui.setItem(45,new PItemStack(Material.BARRIER,"&e加载中···"));
             new BukkitRunnable(){
                 int s1 = 0;
                 int s2 = 10;
@@ -336,12 +336,12 @@ public class PPageGui extends CustomGui{
                 @Override
                 public void run() {
                     try {
-                        pagegui.setItem(s1,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
-                        pagegui.setItem(s2,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
-                        pagegui.setItem(s3,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
-                        pagegui.setItem(s4,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
-                        pagegui.setItem(s5,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
-                        pagegui.setItem(s6,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
+                        pagegui.setItem(s1,new PItemStack(Material.BARRIER,"&e加载中···"));
+                        pagegui.setItem(s2,new PItemStack(Material.BARRIER,"&e加载中···"));
+                        pagegui.setItem(s3,new PItemStack(Material.BARRIER,"&e加载中···"));
+                        pagegui.setItem(s4,new PItemStack(Material.BARRIER,"&e加载中···"));
+                        pagegui.setItem(s5,new PItemStack(Material.BARRIER,"&e加载中···"));
+                        pagegui.setItem(s6,new PItemStack(Material.BARRIER,"&e加载中···"));
                         s1= s1+1;
                         s2= s2+1;
                         s3= s3+1;
@@ -370,15 +370,15 @@ public class PPageGui extends CustomGui{
                 public void run() {
                     if (who == 0 || who == 3 || who == 6){
                         pagegui.setItem(s3, new PItemStack(Material.AIR));
-                        pagegui.setItem(s1,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
+                        pagegui.setItem(s1,new PItemStack(Material.BARRIER,"&e加载中···"));
                     }
                     if (who == 1 || who == 4 || who == 7) {
                         pagegui.setItem(s1, new PItemStack(Material.AIR));
-                        pagegui.setItem(s2,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
+                        pagegui.setItem(s2,new PItemStack(Material.BARRIER,"&e加载中···"));
                     }
                     if (who == 2 || who == 5 || who == 8){
                         pagegui.setItem(s2, new PItemStack(Material.AIR));
-                        pagegui.setItem(s3,new PItemStack(Material.GREEN_STAINED_GLASS_PANE,"&e加载中···"));
+                        pagegui.setItem(s3,new PItemStack(Material.BARRIER,"&e加载中···"));
                     }
                     who = who + 1;
                     if (who >= 9){

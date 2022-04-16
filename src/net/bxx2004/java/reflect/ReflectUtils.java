@@ -42,11 +42,14 @@ public class ReflectUtils {
      * 获得方法
      * @param c 所在类
      * @param methodName 方法名
-     * @param arms 参数
      * @return 方法
      */
     public static Method getMethod(Class c, String methodName,Class... arms){
         try {
+            if (arms.length <= 0){
+                Method method = c.getDeclaredMethod(methodName);
+                return method;
+            }
             Method method = c.getDeclaredMethod(methodName,arms);
             return method;
         } catch (Exception e) {

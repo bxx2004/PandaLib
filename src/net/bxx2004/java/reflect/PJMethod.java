@@ -64,7 +64,21 @@ public class PJMethod {
         this.classes = classes;
         return this;
     }
-
+    public Object runIgnoreArgs(Object o){
+        this.method = ReflectUtils.getMethod(aClass,methodName);
+        try {
+            try {
+                this.method.setAccessible(true);
+            }catch (Exception e){}
+            Object res = method.invoke(o,this.objects);
+            return res;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /**
      * 执行这个方法
      * @param object 执行对象

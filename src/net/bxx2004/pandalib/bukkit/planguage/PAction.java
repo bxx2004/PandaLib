@@ -1,5 +1,6 @@
 package net.bxx2004.pandalib.bukkit.planguage;
 
+import net.bxx2004.pandalib.PandaLib;
 import net.bxx2004.pandalib.bukkit.manager.Lang;
 import org.bukkit.entity.Player;
 
@@ -37,7 +38,10 @@ public abstract class PAction{
      */
     public static Object go(String word,Player player){
         try {
-            goWord(word,player);
+            if (word.startsWith("~~~")){
+                return null;
+            }
+            return goWord(word.replaceAll("<PLAYER>",player.getName()),player);
         }catch (Exception e){
             Lang.error("&4PandaScript运行时错误",word);
             e.printStackTrace();
@@ -59,7 +63,10 @@ public abstract class PAction{
      * @param player 玩家
      * @return 执行结果
      */
-    public static Object goWord(String word,Player player){
+    private static Object goWord(String word,Player player){
+        if (word.startsWith("$")){
+            return PandaLib.data.get(word.replaceAll("\\$",""));
+        }
         String words = word.split(" ")[0].toLowerCase();
         String[] args = word.split(" ");
         String[] args1 = new String[args.length - 1];
@@ -73,7 +80,7 @@ public abstract class PAction{
         if (!map.keySet().contains(words) && (!word.trim().startsWith("_"))){
             Lang.print("&c[&fPAction&c] &c执行失败,该动作 &f" + words +" &c无效...");
         }else {
-            return map.get(words).vaule(player,args1);
+            return (map.get(words).vaule(player,args1));
         }
         return "[Null]";
     }

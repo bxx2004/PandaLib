@@ -5,6 +5,9 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * 拓展事件
+ */
 public abstract class ExtendEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 

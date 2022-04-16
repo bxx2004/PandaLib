@@ -4,6 +4,7 @@ import net.bxx2004.java.reflect.PJMethod;
 import net.bxx2004.java.reflect.PJVariable;
 import net.bxx2004.java.reflect.ReflectUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,7 +17,7 @@ public class PNMS {
      * @return 是否是1.17及以上服务端版本
      */
     public static boolean is1_17UPServer(){
-        if (getVersionForNMS().equalsIgnoreCase("net.minecraft")){
+        if (getNMSPackageName().equalsIgnoreCase("net.minecraft")){
             return true;
         }else {
             return false;
@@ -26,7 +27,7 @@ public class PNMS {
      * 获取当前版本NMS的包名
      * @return 包名
      */
-    public static String getVersionForNMS(){
+    public static String getNMSPackageName(){
         String[] versions = Bukkit.getBukkitVersion().split("\\.");
         String major = versions[0];
         String minor = versions[1];
@@ -50,7 +51,7 @@ public class PNMS {
      * 获取当前版本OBC的包名
      * @return 包名
      */
-    public static String getVersionForOBC(){
+    public static String getOBCPackageName(){
         String[] versions = Bukkit.getBukkitVersion().split("\\.");
         String major = versions[0];
         String minor = versions[1];
@@ -74,7 +75,7 @@ public class PNMS {
      * @return CraftPlayer
      */
     public static Object getCraftPlayer(Player player){
-        Object cplayer = ReflectUtils.getClass(getVersionForOBC() + ".entity.CraftPlayer").cast(player);
+        Object cplayer = ReflectUtils.getClass(getOBCPackageName() + ".entity.CraftPlayer").cast(player);
         return cplayer;
     }
 
@@ -84,11 +85,15 @@ public class PNMS {
      * @return NMS物品堆
      */
     public static Object getNMSItemStack(ItemStack item){
-        PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC()+".inventory.CraftItemStack"));
-        Object o = method.InPutName("asNMSCopy").InPutArg(item).run(null);
+        PJMethod method = new PJMethod(ReflectUtils.getClass(getOBCPackageName()+".inventory.CraftItemStack"),"asNMSCopy",ItemStack.class);
+        Object o = method.runMethod(null,item);
         return o;
     }
-
+    public static ItemStack getBukkitItemStack(Object item){
+        PJMethod method = new PJMethod(ReflectUtils.getClass(getOBCPackageName()+".inventory.CraftItemStack"));
+        ItemStack o = (ItemStack) method.InPutName("asBukkitCopy").InPutArg(item).run(null);
+        return o;
+    }
     /**
      * 发送数据包给某个玩家
      * @param player 玩家
@@ -96,16 +101,16 @@ public class PNMS {
      */
     public static void sendPacket(Player player, Object packet){
         if (is1_17UPServer()){
-            PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC() + ".entity.CraftPlayer"),"getHandle");
+            PJMethod method = new PJMethod(ReflectUtils.getClass(getOBCPackageName() + ".entity.CraftPlayer"),"getHandle");
             Object hand = method.runMethod(getCraftPlayer(player));
             PJVariable var = new PJVariable(hand);
-            PJMethod method1 = new PJMethod(ReflectUtils.getClass(getVersionForNMS() + ".server.network.PlayerConnection"),"sendPacket",ReflectUtils.getClass(getVersionForNMS() + ".network.protocol.Packet"));
+            PJMethod method1 = new PJMethod(ReflectUtils.getClass(getNMSPackageName() + ".server.network.PlayerConnection"),"sendPacket",ReflectUtils.getClass(getNMSPackageName() + ".network.protocol.Packet"));
             method1.runMethod(var.getValue("b"),packet);
         }else {
-            PJMethod method = new PJMethod(ReflectUtils.getClass(getVersionForOBC() + ".entity.CraftPlayer"),"getHandle");
+            PJMethod method = new PJMethod(ReflectUtils.getClass(getOBCPackageName() + ".entity.CraftPlayer"),"getHandle");
             Object hand = method.runMethod(getCraftPlayer(player));
             PJVariable var = new PJVariable(hand);
-            PJMethod method1 = new PJMethod(ReflectUtils.getClass(getVersionForNMS() + ".PlayerConnection"),"sendPacket",ReflectUtils.getClass(getVersionForNMS() + ".Packet"));
+            PJMethod method1 = new PJMethod(ReflectUtils.getClass(getNMSPackageName() + ".PlayerConnection"),"sendPacket",ReflectUtils.getClass(getNMSPackageName() + ".Packet"));
             method1.runMethod(var.getValue("playerConnection"),packet);
         }
     }

@@ -1,15 +1,26 @@
 package net.bxx2004.pandalib.bukkit.pitem;
 
+import net.bxx2004.java.reflect.PJMethod;
+import net.bxx2004.java.reflect.PJVariable;
+import net.bxx2004.java.reflect.ReflectUtils;
+import net.bxx2004.pandalib.bukkit.pitem.nbt.NBTMeta;
+import net.bxx2004.pandalib.bukkit.pitem.nbt.type.*;
+import net.bxx2004.pandalib.bukkit.putil.PNMS;
+import net.minecraft.nbt.NBTTagCompound;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -22,6 +33,20 @@ public class PItemStack extends ItemStack {
      */
     protected PItemStack() {
 
+    }
+    public PItemStack(String playerID,String name,String... lore){
+        super(new ItemStack(Material.PLAYER_HEAD));
+        SkullMeta meta = (SkullMeta) super.getItemMeta();
+        meta.setOwner(playerID);
+        meta.setDisplayName(name.replaceAll("&", "§"));
+        if (lore != null){
+            List<String> list = new ArrayList<String>();
+            for (int i = 0; i < lore.length; i++){
+                list.add(lore[i].replaceAll("&", "§"));
+            }
+            meta.setLore(list);
+        }
+        super.setItemMeta(meta);
     }
     /**
      *  构造一个自定义物品堆
@@ -108,7 +133,13 @@ public class PItemStack extends ItemStack {
         super.setItemMeta(meta);
         super.addUnsafeEnchantments(map);
     }
-
+    public PItemStack resetMeta(NBTMeta meta){
+        //停工(!!!)(!!!)(!!!)
+        return null;
+    }
+    public NBTMeta nbtMeta(){
+        return new NBTMeta(this);
+    }
     /**
      * 为该物品增加Lore
      * @param lore 描述

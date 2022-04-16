@@ -2,15 +2,24 @@ package net.bxx2004.pandalib.bukkit.pparticle.common;
 
 import net.bxx2004.pandalib.bukkit.pparticle.ImpParticle;
 import net.bxx2004.pandalib.bukkit.pparticle.PParticle;
-import net.bxx2004.pandalib.bukkit.pparticle.ParticleBuilder;
 import org.bukkit.Location;
+import xyz.xenondevs.particle.ParticleBuilder;
+import xyz.xenondevs.particle.ParticleEffect;
+
 import java.lang.Math;
 /**
  * 代表一个圆
  */
-public class Circle extends ParticleBuilder implements ImpParticle {
-    private PParticle p;
-    public Circle(PParticle particle,double ridius, int step){
+public class Circle extends PParticle implements ImpParticle {
+    private ParticleBuilder p;
+
+    /**
+     * 代表一个圆
+     * @param particle 粒子
+     * @param ridius 半径
+     * @param step 步长
+     */
+    public Circle(ParticleBuilder particle, double ridius, int step){
         super(new MathUnit[]{MathUnit.RIDIUS,MathUnit.STEP},new double[]{ridius,step});
         this.p = particle;
     }
@@ -26,7 +35,8 @@ public class Circle extends ParticleBuilder implements ImpParticle {
             double x = Math.cos(radians) * value(MathUnit.RIDIUS);
             double y = Math.sin(radians) * value(MathUnit.RIDIUS);
             location.add(x, 0, y);
-            location.getWorld().spawnParticle(p.particle,location, p.i);
+            p.setLocation(location);
+            p.display();
             location.subtract(x, 0, y);
         }
     }
@@ -36,8 +46,4 @@ public class Circle extends ParticleBuilder implements ImpParticle {
         return "Circle";
     }
 
-    @Override
-    public void showPacket(Location location) {
-
-    }
 }

@@ -135,10 +135,8 @@ public abstract class PCommand implements TabExecutor {
      * @param player player可为null , 不为null的情况下直接以中文形式发送命令帮助给玩家
      * @return 命令帮助
      */
-    public static PHelper getCommandHelp(PLangNode node,PCommand pCommand, Player player){
-        if (pCommand.helper == null){
-            pCommand.hookHelper(node);
-        }
+    public static PHelper getCommandHelp(PLangNode node,PCommand pCommand, CommandSender player){
+        pCommand.hookHelper(node);
         if (player != null){
             pCommand.helper.toPlayerOfKey(player, pCommand.name,true);
         }

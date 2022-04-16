@@ -4,6 +4,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class PMessage {
      * @param value 执行的命令
      * @param hover 悬浮信息
      */
-    public static void to2(Player player, String message, ClickEvent.Action action, String value, String hover){
+    public static void to2(CommandSender player, String message, ClickEvent.Action action, String value, String hover){
         TextComponent textComponent = new TextComponent();
         textComponent.setText(message.replaceAll("&", "§"));
         textComponent.setClickEvent(new ClickEvent(action,value));
@@ -37,7 +38,7 @@ public class PMessage {
      * @param player 玩家
      * @param message 消息 Shift+7为颜色符号
      */
-    public static void to(Player player, String message){
+    public static void to(CommandSender player, String message){
         player.sendMessage(message.replaceAll("&", "§"));
     }
 
@@ -46,7 +47,7 @@ public class PMessage {
      * @param player 玩家
      * @param list 列表
      */
-    public static void toList(Player player, List list){
+    public static void toList(CommandSender player, List list){
         for (Object st : list){
             String a = (String) st;
             player.sendMessage(a.replaceAll("&", "§"));

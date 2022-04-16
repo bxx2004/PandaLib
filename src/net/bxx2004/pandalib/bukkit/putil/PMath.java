@@ -1,5 +1,9 @@
 package net.bxx2004.pandalib.bukkit.putil;
 
+import net.bxx2004.pandalib.bukkit.manager.Lang;
+import net.bxx2004.pandalib.bukkit.planguage.PAction;
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,6 +12,36 @@ import java.util.Random;
  * 数学工具
  */
 public class PMath {
+    public static boolean sum(Player player, String term){
+        try {
+            if (term.contains("|")){
+                String[] a = term.split("\\|");
+                for (String b : a){
+                    boolean result = (boolean) PAction.go(b.trim(),player);
+                    if (result){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            if (term.contains("&")){
+                String[] a = term.split("&");
+                for (String b : a){
+                    boolean result = (boolean) PAction.go(b.trim(),player);
+                    if (!result){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            boolean result = (boolean) PAction.go(term.trim(),player);
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+            Lang.error("&4异常: IF条件异常",term);
+        }
+        return false;
+    }
     /**
      * 随机数
      */

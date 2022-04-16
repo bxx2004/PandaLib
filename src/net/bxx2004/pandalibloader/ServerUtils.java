@@ -9,8 +9,39 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ServerUtils {
+    public static String getUrl(){
+        try {
+            URL url = new URL("https://gitee.com/bxx2004/security-verification/raw/master/url");
+            InputStream is = url.openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            String A = br.readLine();
+            br.close();
+            return A;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+    public static List<String> getPluginList(URL url){
+        List<String> list = new ArrayList<>();
+        try {
+            InputStream is = url.openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            Iterator<String> i = br.lines().iterator();
+            while (i.hasNext()){
+                list.add(i.next());
+            }
+            br.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
     public static String get256(String str){
         MessageDigest messageDigest;
         String encodeStr = "";

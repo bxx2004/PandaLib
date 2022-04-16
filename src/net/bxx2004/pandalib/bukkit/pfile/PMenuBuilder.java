@@ -6,9 +6,12 @@ import net.bxx2004.pandalib.bukkit.pitem.PItemStack;
 import net.bxx2004.pandalib.bukkit.planguage.PAction;
 import net.bxx2004.pandalib.bukkit.plistener.PListener;
 import net.bxx2004.pandalib.bukkit.putil.PPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -22,17 +25,16 @@ import java.util.List;
  * 按照特定的Yaml文件格式构建一个菜单
  * 格式请查阅doc教程
  */
-public class PMenuBuilder {
+public class PMenuBuilder{
     private PYml data;
     private CustomGui gui;
     private boolean keep;
 
     /**
      * 构造
-     * @param pluginname 插件名
      * @param menuYml 文件
      */
-    public PMenuBuilder(String pluginname, PYml menuYml){
+    public PMenuBuilder(String pluginName,PYml menuYml){
         this.data = menuYml;
         this.gui = CustomGui.createGUI(data.getString("Title").replaceAll("&","§"),data.getList("Index").size()*9);
         StringBuffer buffer = new StringBuffer();
@@ -48,21 +50,12 @@ public class PMenuBuilder {
                 gui.getInventory().setItem(i,getButton(String.valueOf(index2[i])));
             }
         }
-        gui.addListener(new PListener(){
+        new PListener(){
             @EventHandler
             public void on(InventoryClickEvent event){
                 if (event.getView().getTitle().equals(data.getString("Title").replaceAll("&","§")) && event.getInventory().getSize() == data.getList("Index").size()*9){
                     event.setCancelled(true);
                 }
-            }
-            @EventHandler
-            public void onclose(InventoryCloseEvent event) {
-                if (event.getView().getTitle().equals(data.getString("Title").replaceAll("&","§")) && event.getInventory().getSize() == data.getList("Index").size()*9) {
-                    this.unhook();
-                }
-            }
-            @EventHandler
-            public void onClick(InventoryClickEvent event){
                 try {
                     if (event.getView().getTitle().equals(data.getString("Title").replaceAll("&","§")) && event.getInventory().getSize() == data.getList("Index").size()*9){
                         if (event.getCurrentItem() != null || event.getCurrentItem().getType() != Material.AIR){
@@ -77,7 +70,13 @@ public class PMenuBuilder {
                     }
                 }catch (Exception e){}
             }
-        }.hook(PPlugin.getPlugin(pluginname)));
+            @EventHandler
+            public void onclose(InventoryCloseEvent event) {
+                if (event.getView().getTitle().equals(data.getString("Title").replaceAll("&","§")) && event.getInventory().getSize() == data.getList("Index").size()*9) {
+                    HandlerList.unregisterAll(this);
+                }
+            }
+        }.hook(pluginName);
     }
 
     /**

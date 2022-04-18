@@ -1,21 +1,11 @@
 package net.bxx2004.pandalib.bukkit.pitem.nbt;
 
-import jdk.internal.org.jline.utils.InputStreamReader;
 import net.bxx2004.java.reflect.PJMethod;
 import net.bxx2004.java.reflect.PJVariable;
-import net.bxx2004.java.reflect.ReflectUtils;
 import net.bxx2004.pandalib.bukkit.pitem.nbt.type.*;
 import net.bxx2004.pandalib.bukkit.putil.PNMS;
-import net.minecraft.nbt.NBTReadLimiter;
-import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**

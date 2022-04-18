@@ -6,6 +6,8 @@
       <element id="extracted-dir" path="$USER_HOME$/Desktop/新建文件夹/reflections-0.10.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Desktop/新建文件夹/javassist.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../Server/ParticleLib-1.7.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/新建文件夹/fastjson-1.2.79.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/NBTAPI-1.0.1.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

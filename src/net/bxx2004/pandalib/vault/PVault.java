@@ -1,7 +1,8 @@
-package net.bxx2004.pandalib.bukkit.otherplugin;
+package net.bxx2004.pandalib.vault;
 
 import net.bxx2004.java.reflect.PJMethod;
 import net.bxx2004.pandalib.PandaLib;
+import net.bxx2004.pandalib.bukkit.ptask.register.AutoConstruct;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -23,7 +24,7 @@ public class PVault {
     /**
      * 注册Vault
      */
-    public static void register(){
+    public PVault(){
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
         if (economyProvider != null) {
             economy = economyProvider.getProvider();

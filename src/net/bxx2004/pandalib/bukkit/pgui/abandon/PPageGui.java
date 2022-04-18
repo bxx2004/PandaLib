@@ -1,4 +1,4 @@
-package net.bxx2004.pandalib.bukkit.pgui;
+package net.bxx2004.pandalib.bukkit.pgui.abandon;
 
 import net.bxx2004.pandalib.PandaLib;
 import net.bxx2004.pandalib.bukkit.pitem.PItemStack;
@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * 自定义翻页GUI
  */
+@Deprecated
 public class PPageGui extends CustomGui{
     private PListener pListener = new PListener() {
         @EventHandler

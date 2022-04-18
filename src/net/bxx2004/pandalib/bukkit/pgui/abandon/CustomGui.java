@@ -1,4 +1,4 @@
-package net.bxx2004.pandalib.bukkit.pgui;
+package net.bxx2004.pandalib.bukkit.pgui.abandon;
 
 import net.bxx2004.pandalib.bukkit.plistener.PListener;
 import org.bukkit.Bukkit;
@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 /**
  * 快速自定义GUI的抽象类
  */
+@Deprecated
 public abstract class CustomGui{
     /**
      * 得到CustomGui的类型

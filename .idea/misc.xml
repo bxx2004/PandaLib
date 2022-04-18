@@ -6,7 +6,8 @@
     <option name="OPTION_DOCUMENT_TAG_USE" value="true" />
     <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="true" />
     <option name="OPTION_DOCUMENT_TAG_VERSION" value="true" />
-    <option name="OTHER_OPTIONS" value="-encoding UTF-8 -charset UTF-8 " />
+    <option name="OTHER_OPTIONS" value="-encoding UTF-8 -charset UTF-8  -windowtitle PandaLib" />
+    <option name="OPTION_INCLUDE_LIBS" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

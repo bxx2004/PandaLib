@@ -1,8 +1,9 @@
-package net.bxx2004.pandalib.bukkit.pgui;
+package net.bxx2004.pandalib.bukkit.pgui.abandon;
 
 /**
  * 动画类型
  */
+@Deprecated
 public enum Animation{
     /**
      * 刷子

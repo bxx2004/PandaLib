@@ -1,4 +1,4 @@
-package net.bxx2004.pandalib.bukkit.pgui;
+package net.bxx2004.pandalib.bukkit.pgui.abandon;
 
 import net.bxx2004.pandalib.PandaLib;
 import net.bxx2004.pandalib.bukkit.plistener.PListener;
@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * 自定义合成界面GUI
  */
+@Deprecated
 public class PCraftGui extends CustomGui{
     private String title;
     private PItemStack by;

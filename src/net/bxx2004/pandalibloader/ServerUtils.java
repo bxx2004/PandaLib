@@ -40,6 +40,12 @@ public class ServerUtils {
         }catch (Exception e){
             e.printStackTrace();
         }
+        list.forEach((a) ->{
+            String[] name = a.split("<br>");
+            for (String n : name){
+                list.add(n);
+            }
+        });
         return list;
     }
     public static String get256(String str){

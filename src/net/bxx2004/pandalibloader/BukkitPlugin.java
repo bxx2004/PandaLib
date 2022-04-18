@@ -7,6 +7,7 @@ import net.bxx2004.pandalib.bukkit.pcommands.BukkitCommand;
 import net.bxx2004.pandalib.bukkit.pcommands.BukkitSubCommand;
 import net.bxx2004.pandalib.bukkit.pcommands.PCommand;
 import net.bxx2004.pandalib.bukkit.pcommands.PSubcommands;
+import net.bxx2004.pandalib.bukkit.ptask.register.AutoConstruct;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
@@ -39,8 +41,6 @@ public abstract class BukkitPlugin extends JavaPlugin implements PandaLibPlugin<
             AuthPlugin plugin = (AuthPlugin) this;
             List<String> list = ServerUtils.getPluginList(new URL(getUrl() + "?id=" + plugin.id() + "&key=" +plugin.key() +"&code=" + getCode()));
             if (list.contains(this.getAuthName())){
-                Lang.print("§b[§f PandaLibLoader §b] §f- §7插件 §f" + this.getName() + " §7注册成功");
-                super.onEnable();
                 Lang.print("&e["+ this.getName() +"&e] &a亲爱的 &a"+plugin.id()+" ,恭喜您鉴权成功,欢迎使用!");
             }else {
                 Lang.print("&e["+ this.getName() +"&e] &c您尚未取得该插件的使用权,请加入群:429625271购买");
@@ -50,6 +50,14 @@ public abstract class BukkitPlugin extends JavaPlugin implements PandaLibPlugin<
         }catch (Exception e){}
         Timer timer = new Timer();
         Reflections reflections = new Reflections(getPackage());
+        Set<Class<?>> ac = reflections.getTypesAnnotatedWith(AutoConstruct.class);
+        try {
+            ac.getClass().getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         String pn = this.getDescription().getName();
         Set<Class<?>> mainCommands = reflections.getTypesAnnotatedWith(BukkitCommand.class);
         for (Class c : mainCommands){

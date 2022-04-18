@@ -1,20 +1,17 @@
 package net.bxx2004.pandalib;
 
 import net.bxx2004.pandalib.bukkit.manager.Lang;
-import net.bxx2004.pandalib.bukkit.otherplugin.PVault;
+import net.bxx2004.pandalib.vault.PVault;
 import net.bxx2004.pandalib.bukkit.pfile.PYml;
-import net.bxx2004.pandalib.bukkit.pitem.PItemStack;
 import net.bxx2004.pandalib.bukkit.planguage.PAction;
 import net.bxx2004.pandalib.bukkit.planguage.PActionBar;
 import net.bxx2004.pandalib.bukkit.planguage.PMessage;
 import net.bxx2004.pandalib.bukkit.planguage.PTitle;
 import net.bxx2004.pandalib.bukkit.planguage.pactionextend.PlayerControl;
-import net.bxx2004.pandalib.bukkit.plistener.PListener;
 import net.bxx2004.pandalib.bukkit.putil.PMath;
 import net.bxx2004.pandalib.bukkit.putil.PPlugin;
 import net.bxx2004.pandalibloader.PandaLibPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -42,6 +39,7 @@ public class PandaLib{
                 @Override
                 public void run() {
                     registerAction();
+                    new PVault();
                 }
             }.run();
         }
@@ -105,13 +103,6 @@ public class PandaLib{
             reder.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private static void registerOther(){
-        if (PPlugin.getPlugin("Vault") != null){
-            PVault.register();
-            Lang.print("检测到 Vault 插件,相关功能已经注册!");
         }
     }
     public  static HashMap<String,String> data = new HashMap<>();

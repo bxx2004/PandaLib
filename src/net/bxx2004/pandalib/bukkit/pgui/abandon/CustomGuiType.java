@@ -1,10 +1,10 @@
-package net.bxx2004.pandalib.bukkit.pgui;
+package net.bxx2004.pandalib.bukkit.pgui.abandon;
 
 /**
  * GUI界面类型
  * @author bxx2004
  */
-
+@Deprecated
 public enum CustomGuiType{
     /**
      * 一个类似于Slimefun的合成表GUI 3 x 9

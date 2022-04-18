@@ -1,4 +1,4 @@
-package net.bxx2004.pandalib.bukkit.pgui;
+package net.bxx2004.pandalib.bukkit.pgui.abandon;
 
 import net.bxx2004.pandalib.PandaLib;
 import net.bxx2004.pandalib.bukkit.pitem.PItemStack;
@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * 自定义一个简单带边框的GUI
  */
+@Deprecated
 public class PSimpleGui extends CustomGui {
     private String title;
     private PItemStack barrier;
